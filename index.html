@@ -147,6 +147,17 @@
         </div>
     </div>
 
+    <!-- 로그 패널 (게임 스크린 밖) -->
+    <div id="log-panel" class="side-panel log-panel">
+        <div class="side-panel-header">
+            <span>📋 게임 로그</span>
+            <button class="log-panel-clear" title="로그 삭제">🗑️</button>
+        </div>
+        <div class="side-panel-body" id="log-content">
+            <!-- 로그 메시지가 여기에 추가됩니다 -->
+        </div>
+    </div>
+
     <!-- 모달 오버레이 -->
     <div id="modal-overlay" class="hidden">
         <!-- 인벤토리 모달 -->
@@ -339,6 +350,7 @@
     <script src="js/data/decorations.js"></script>
     <script src="js/core/utils.js"></script>
     <script src="js/core/audio.js"></script>
+    <script src="js/core/log.js"></script>
     <script src="js/core/save.js"></script>
     <script src="js/systems/time.js"></script>
     <script src="js/systems/weather.js"></script>

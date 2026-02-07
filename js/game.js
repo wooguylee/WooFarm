@@ -100,7 +100,13 @@
             Utils.hideElement(document.getElementById('game-screen'));
             Utils.hideElement(document.getElementById('toolbar'));
             Utils.hideElement(document.getElementById('seed-panel'));
+            Utils.hideElement(document.getElementById('log-panel'));
             Utils.showElement(document.getElementById('main-menu'));
+
+            // LogManager 초기화
+            if (window.LogManager) {
+                window.LogManager.init();
+            }
 
             // 이어하기 버튼 상태
             const btnLoad = document.getElementById('btn-load-game');
@@ -190,9 +196,12 @@
             // 환영 알림
             NotificationUI.show('🌾 WooFarm에 오신 것을 환영합니다! 농장을 가꿔보세요!', 'success', 5000);
 
-            // 도구바와 씨앗 패널 표시
+            // 도구바와 씨앗 패널, 로그 패널 표시
             const toolbar = document.getElementById('toolbar');
             if (toolbar) Utils.showElement(toolbar);
+            
+            const logPanel = document.getElementById('log-panel');
+            if (logPanel) Utils.showElement(logPanel);
 
             // HUD 업데이트
             HudUI.update();
@@ -273,14 +282,17 @@
              AnimalSystem.renderAnimalArea();
              DecorationSystem.renderDecorations();
 
-             // 도구바 표시
-             const toolbar = document.getElementById('toolbar');
-             if (toolbar) Utils.showElement(toolbar);
+              // 도구바와 로그 패널 표시
+              const toolbar = document.getElementById('toolbar');
+              if (toolbar) Utils.showElement(toolbar);
+              
+              const logPanel = document.getElementById('log-panel');
+              if (logPanel) Utils.showElement(logPanel);
 
-             // HUD 업데이트
-             HudUI.update();
+              // HUD 업데이트
+              HudUI.update();
 
-             NotificationUI.show('💾 게임을 불러왔습니다!', 'success');
+              NotificationUI.show('💾 게임을 불러왔습니다!', 'success');
         },
 
         /** 모든 시스템 초기화 */

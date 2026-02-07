@@ -489,9 +489,9 @@
         // 선택 상태 UI 갱신
         var allSeeds = document.querySelectorAll('.seed-item');
         for (var j = 0; j < allSeeds.length; j++) {
-          allSeeds[j].classList.remove('seed-selected');
+          allSeeds[j].classList.remove('selected');
         }
-        el.classList.add('seed-selected');
+        el.classList.add('selected');
       });
 
       return el;
