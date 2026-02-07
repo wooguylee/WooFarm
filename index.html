@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WooFarm - 픽셀 농장 게임</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/pixel-art.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/ui.css">
+</head>
+<body>
+    <!-- 로딩 화면 -->
+    <div id="loading-screen">
+        <div class="loading-content">
+            <h1 class="pixel-title">WooFarm</h1>
+            <div class="loading-bar-container">
+                <div class="loading-bar" id="loading-bar"></div>
+            </div>
+            <p class="loading-text" id="loading-text">로딩 중...</p>
+        </div>
+    </div>
+
+    <!-- 메인 메뉴 -->
+    <div id="main-menu" class="hidden">
+        <div class="menu-content">
+            <h1 class="pixel-title game-title">WooFarm</h1>
+            <p class="subtitle">나만의 픽셀 농장을 가꾸세요!</p>
+            <div class="menu-buttons">
+                <button class="pixel-btn btn-primary" id="btn-new-game">새 게임</button>
+                <button class="pixel-btn btn-secondary" id="btn-load-game">이어하기</button>
+                <button class="pixel-btn btn-info" id="btn-how-to-play">게임 방법</button>
+                <button class="pixel-btn btn-info" id="btn-ranking">랭킹</button>
+            </div>
+        </div>
+        <div class="menu-decoration">
+            <div class="pixel-cloud cloud-1"></div>
+            <div class="pixel-cloud cloud-2"></div>
+            <div class="pixel-sun"></div>
+            <div class="menu-farm-scene"></div>
+        </div>
+    </div>
+
+    <!-- 게임 화면 -->
+    <div id="game-screen" class="hidden">
+        <!-- 상단 HUD -->
+        <div id="hud">
+            <div class="hud-left">
+                <div class="hud-item" id="hud-day">
+                    <span class="hud-icon">📅</span>
+                    <span id="display-day">1일차</span>
+                </div>
+                <div class="hud-item" id="hud-season">
+                    <span class="hud-icon">🌸</span>
+                    <span id="display-season">봄</span>
+                </div>
+                <div class="hud-item" id="hud-weather">
+                    <span class="hud-icon" id="weather-icon">☀️</span>
+                    <span id="display-weather">맑음</span>
+                </div>
+                <div class="hud-item" id="hud-time">
+                    <span class="hud-icon">🕐</span>
+                    <span id="display-time">06:00</span>
+                </div>
+            </div>
+            <div class="hud-center">
+                <div class="hud-item hud-gold">
+                    <span class="hud-icon">💰</span>
+                    <span id="display-gold">500</span>G
+                </div>
+                <div class="hud-item hud-level">
+                    <span class="hud-icon">⭐</span>
+                    Lv.<span id="display-level">1</span>
+                    <div class="exp-bar-mini">
+                        <div class="exp-bar-fill" id="exp-bar-fill"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="hud-right">
+                <button class="hud-btn" id="btn-inventory" title="인벤토리 (I)">🎒</button>
+                <button class="hud-btn" id="btn-quest-log" title="퀘스트 (Q)">📜</button>
+                <button class="hud-btn" id="btn-shop" title="상점 (S)">🏪</button>
+                <button class="hud-btn" id="btn-animals" title="동물 (A)">🐄</button>
+                <button class="hud-btn" id="btn-decor" title="장식 (D)">🏡</button>
+                <button class="hud-btn" id="btn-settings" title="설정 (ESC)">⚙️</button>
+            </div>
+        </div>
+
+        <!-- 게임 월드 -->
+        <div id="game-world">
+            <!-- 날씨 효과 레이어 -->
+            <div id="weather-layer"></div>
+            <!-- 시간대 오버레이 -->
+            <div id="time-overlay"></div>
+            <!-- 농장 그리드 -->
+            <div id="farm-grid"></div>
+            <!-- 동물 영역 -->
+            <div id="animal-area"></div>
+            <!-- 장식 영역 -->
+            <div id="decoration-area"></div>
+            <!-- 플레이어 캐릭터 -->
+            <div id="player" class="pixel-character">
+                <div class="character-sprite"></div>
+            </div>
+        </div>
+
+        <!-- 도구 바 -->
+        <div id="toolbar">
+            <div class="tool-slot selected" data-tool="hoe" title="괭이 (1)">
+                <div class="tool-icon">⛏️</div>
+                <span class="tool-key">1</span>
+            </div>
+            <div class="tool-slot" data-tool="water" title="물뿌리개 (2)">
+                <div class="tool-icon">🚿</div>
+                <span class="tool-key">2</span>
+            </div>
+            <div class="tool-slot" data-tool="seed" title="씨앗 (3)">
+                <div class="tool-icon">🌱</div>
+                <span class="tool-key">3</span>
+            </div>
+            <div class="tool-slot" data-tool="harvest" title="수확 (4)">
+                <div class="tool-icon">🧺</div>
+                <span class="tool-key">4</span>
+            </div>
+            <div class="tool-slot" data-tool="feed" title="먹이 (5)">
+                <div class="tool-icon">🥕</div>
+                <span class="tool-key">5</span>
+            </div>
+            <div class="tool-slot" data-tool="decorate" title="장식 (6)">
+                <div class="tool-icon">🎨</div>
+                <span class="tool-key">6</span>
+            </div>
+        </div>
+
+        <!-- 씨앗 선택 패널 -->
+        <div id="seed-panel" class="side-panel hidden">
+            <h3 class="panel-title">씨앗 선택</h3>
+            <div id="seed-list" class="panel-list"></div>
+        </div>
+
+        <!-- 알림 영역 -->
+        <div id="notification-area"></div>
+    </div>
+
+    <!-- 모달 오버레이 -->
+    <div id="modal-overlay" class="hidden">
+        <!-- 인벤토리 모달 -->
+        <div id="inventory-modal" class="modal hidden">
+            <div class="modal-header">
+                <h2>🎒 인벤토리</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="inventory-tabs">
+                    <button class="inv-tab active" data-tab="all">전체</button>
+                    <button class="inv-tab" data-tab="crops">작물</button>
+                    <button class="inv-tab" data-tab="seeds">씨앗</button>
+                    <button class="inv-tab" data-tab="animal-products">동물 생산품</button>
+                    <button class="inv-tab" data-tab="tools">도구</button>
+                </div>
+                <div id="inventory-grid" class="inventory-grid"></div>
+                <div id="item-info" class="item-info-panel">
+                    <p class="placeholder-text">아이템을 선택하세요</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 상점 모달 -->
+        <div id="shop-modal" class="modal hidden">
+            <div class="modal-header">
+                <h2>🏪 마을 상점</h2>
+                <div class="shop-gold">💰 <span id="shop-gold-display">500</span>G</div>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="shop-tabs">
+                    <button class="shop-tab active" data-shop-tab="buy">구매</button>
+                    <button class="shop-tab" data-shop-tab="sell">판매</button>
+                </div>
+                <div id="shop-buy-panel" class="shop-panel">
+                    <div class="shop-categories">
+                        <button class="shop-cat active" data-cat="seeds">씨앗</button>
+                        <button class="shop-cat" data-cat="animals">동물</button>
+                        <button class="shop-cat" data-cat="tools">도구</button>
+                        <button class="shop-cat" data-cat="decorations">장식</button>
+                    </div>
+                    <div id="shop-items" class="shop-items-grid"></div>
+                </div>
+                <div id="shop-sell-panel" class="shop-panel hidden">
+                    <div id="sell-items" class="shop-items-grid"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 퀘스트 모달 -->
+        <div id="quest-modal" class="modal hidden">
+            <div class="modal-header">
+                <h2>📜 퀘스트</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="quest-tabs">
+                    <button class="quest-tab active" data-quest-tab="active">진행 중</button>
+                    <button class="quest-tab" data-quest-tab="completed">완료</button>
+                </div>
+                <div id="quest-list" class="quest-list"></div>
+            </div>
+        </div>
+
+        <!-- 동물 관리 모달 -->
+        <div id="animal-modal" class="modal hidden">
+            <div class="modal-header">
+                <h2>🐄 동물 관리</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="animal-list" class="animal-list"></div>
+                <div id="animal-detail" class="animal-detail-panel">
+                    <p class="placeholder-text">동물을 선택하세요</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 장식 모달 -->
+        <div id="decor-modal" class="modal hidden">
+            <div class="modal-header">
+                <h2>🏡 농장 꾸미기</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="decor-categories" class="decor-categories"></div>
+                <div id="decor-items" class="decor-items-grid"></div>
+            </div>
+        </div>
+
+        <!-- 설정 모달 -->
+        <div id="settings-modal" class="modal hidden">
+            <div class="modal-header">
+                <h2>⚙️ 설정</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-item">
+                    <label>게임 속도</label>
+                    <input type="range" id="game-speed" min="1" max="5" value="2">
+                    <span id="speed-display">x2</span>
+                </div>
+                <div class="setting-item">
+                    <label>사운드 효과</label>
+                    <input type="range" id="sfx-volume" min="0" max="100" value="70">
+                    <span id="sfx-display">70%</span>
+                </div>
+                <div class="setting-item">
+                    <label>배경 음악</label>
+                    <input type="range" id="bgm-volume" min="0" max="100" value="50">
+                    <span id="bgm-display">50%</span>
+                </div>
+                <div class="setting-buttons">
+                    <button class="pixel-btn btn-primary" id="btn-save-game">게임 저장</button>
+                    <button class="pixel-btn btn-secondary" id="btn-main-menu">메인 메뉴</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 게임 방법 모달 -->
+        <div id="howto-modal" class="modal hidden">
+            <div class="modal-header">
+                <h2>📖 게임 방법</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body howto-body">
+                <div class="howto-section">
+                    <h3>🌾 기본 조작</h3>
+                    <ul>
+                        <li><strong>1~6 키</strong>: 도구 선택</li>
+                        <li><strong>마우스 클릭</strong>: 농장 타일에 도구 사용</li>
+                        <li><strong>I</strong>: 인벤토리</li>
+                        <li><strong>S</strong>: 상점</li>
+                        <li><strong>Q</strong>: 퀘스트</li>
+                        <li><strong>A</strong>: 동물 관리</li>
+                        <li><strong>D</strong>: 장식 모드</li>
+                        <li><strong>ESC</strong>: 설정</li>
+                    </ul>
+                </div>
+                <div class="howto-section">
+                    <h3>🌱 농사 방법</h3>
+                    <ol>
+                        <li>괭이로 땅을 갈아주세요</li>
+                        <li>씨앗을 선택해서 심으세요</li>
+                        <li>물뿌리개로 물을 주세요</li>
+                        <li>작물이 자라면 수확하세요</li>
+                        <li>상점에서 판매하여 돈을 벌세요</li>
+                    </ol>
+                </div>
+                <div class="howto-section">
+                    <h3>🐔 동물 키우기</h3>
+                    <p>상점에서 동물을 구매하고, 매일 먹이를 주면 생산품을 얻을 수 있습니다.</p>
+                </div>
+                <div class="howto-section">
+                    <h3>🌦️ 날씨와 계절</h3>
+                    <p>날씨에 따라 작물 성장이 달라집니다. 비가 오면 물을 주지 않아도 됩니다. 계절마다 재배할 수 있는 작물이 다릅니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 랭킹 모달 -->
+        <div id="ranking-modal" class="modal hidden">
+            <div class="modal-header">
+                <h2>🏆 랭킹</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="ranking-list" class="ranking-list"></div>
+            </div>
+        </div>
+
+        <!-- 하루 종료 모달 -->
+        <div id="day-end-modal" class="modal hidden">
+            <div class="modal-header">
+                <h2>🌙 하루 정산</h2>
+            </div>
+            <div class="modal-body">
+                <div id="day-summary" class="day-summary"></div>
+                <button class="pixel-btn btn-primary" id="btn-next-day">다음 날 시작</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 스크립트 -->
+    <script src="js/data/crops.js"></script>
+    <script src="js/data/animals.js"></script>
+    <script src="js/data/items.js"></script>
+    <script src="js/data/quests.js"></script>
+    <script src="js/data/decorations.js"></script>
+    <script src="js/core/utils.js"></script>
+    <script src="js/core/audio.js"></script>
+    <script src="js/core/save.js"></script>
+    <script src="js/systems/time.js"></script>
+    <script src="js/systems/weather.js"></script>
+    <script src="js/systems/farm.js"></script>
+    <script src="js/systems/inventory.js"></script>
+    <script src="js/systems/shop.js"></script>
+    <script src="js/systems/animals.js"></script>
+    <script src="js/systems/quest.js"></script>
+    <script src="js/systems/decoration.js"></script>
+    <script src="js/systems/ranking.js"></script>
+    <script src="js/ui/notifications.js"></script>
+    <script src="js/ui/modals.js"></script>
+    <script src="js/ui/hud.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>

@@ -1,0 +1,937 @@
+/* ==========================================================================
+   WooFarm - Main Stylesheet
+   A pixel art farm game
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   CSS Custom Properties
+   -------------------------------------------------------------------------- */
+:root {
+  /* --- Primary Greens --- */
+  --green-light: #66BB6A;
+  --green: #4CAF50;
+  --green-dark: #388E3C;
+  --green-darker: #2E7D32;
+  --green-pasture: #7CB342;
+  --green-grass: #558B2F;
+
+  /* --- Earth Browns --- */
+  --brown-light: #A1887F;
+  --brown: #8D6E63;
+  --brown-dark: #6D4C41;
+  --brown-darker: #5D4037;
+  --brown-soil: #4E342E;
+  --brown-border: #3E2723;
+
+  /* --- Sky Blues --- */
+  --blue-sky: #87CEEB;
+  --blue-light: #64B5F6;
+  --blue: #42A5F5;
+  --blue-dark: #1E88E5;
+  --blue-water: #29B6F6;
+  --blue-night: #0D47A1;
+
+  /* --- Gold / Accent --- */
+  --gold: #FFD700;
+  --gold-dark: #FFC107;
+  --gold-light: #FFECB3;
+  --orange: #FF9800;
+  --orange-dark: #F57C00;
+
+  /* --- Night Palette --- */
+  --night-bg: #1a1a2e;
+  --night-mid: #16213e;
+  --night-light: #0f3460;
+  --night-accent: #e94560;
+
+  /* --- UI Surfaces --- */
+  --ui-cream: #FFF8E1;
+  --ui-beige: #F5F5DC;
+  --ui-parchment: #FAEBD7;
+  --ui-white: #FFFDE7;
+  --ui-panel: #FFF3E0;
+  --ui-overlay: rgba(0, 0, 0, 0.55);
+
+  /* --- Pixel Border --- */
+  --pixel-border: #3E2723;
+  --pixel-border-light: #6D4C41;
+  --pixel-shadow: #2A1B12;
+
+  /* --- Red / Danger --- */
+  --red: #F44336;
+  --red-dark: #D32F2F;
+  --red-light: #EF9A9A;
+
+  /* --- Text --- */
+  --text-dark: #263238;
+  --text-body: #37474F;
+  --text-muted: #78909C;
+  --text-light: #ECEFF1;
+  --text-gold: #FFD700;
+
+  /* --- Sizing --- */
+  --tile-size: 64px;
+  --grid-cols: 8;
+  --grid-rows: 6;
+  --toolbar-height: 72px;
+  --hud-height: 56px;
+  --side-panel-width: 220px;
+  --pixel-unit: 4px;
+
+  /* --- Spacing --- */
+  --sp-xs: 4px;
+  --sp-sm: 8px;
+  --sp-md: 16px;
+  --sp-lg: 24px;
+  --sp-xl: 32px;
+  --sp-xxl: 48px;
+
+  /* --- Z-Index Layers --- */
+  --z-ground: 1;
+  --z-crops: 10;
+  --z-animals: 20;
+  --z-player: 30;
+  --z-weather: 40;
+  --z-hud: 100;
+  --z-toolbar: 100;
+  --z-side-panel: 110;
+  --z-notification: 500;
+  --z-modal-overlay: 900;
+  --z-modal: 1000;
+  --z-loading: 2000;
+
+  /* --- Transitions --- */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+  --transition-slow: 0.4s ease;
+}
+
+/* --------------------------------------------------------------------------
+   Reset / Normalize
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Courier New', Courier, monospace;
+  background-color: var(--night-bg);
+  color: var(--text-dark);
+  line-height: 1.4;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+img,
+canvas {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  border: none;
+  outline: none;
+  background: none;
+  cursor: pointer;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Utility: Hidden
+   -------------------------------------------------------------------------- */
+.hidden {
+  display: none !important;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Full Viewport Game Container
+   -------------------------------------------------------------------------- */
+#game-container {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   Loading Screen
+   -------------------------------------------------------------------------- */
+#loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-loading);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--night-bg);
+  gap: var(--sp-lg);
+}
+
+.loading-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--gold);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  text-shadow:
+    3px 3px 0 var(--brown-darker),
+    -1px -1px 0 var(--brown-darker);
+}
+
+.loading-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  letter-spacing: 2px;
+}
+
+.loading-bar-container {
+  width: 280px;
+  height: 24px;
+  background-color: var(--brown-darker);
+  border: 4px solid var(--pixel-border);
+  position: relative;
+  /* pixel corners via box-shadow */
+  box-shadow:
+    4px 0 0 0 var(--pixel-border),
+    -4px 0 0 0 var(--pixel-border),
+    0 4px 0 0 var(--pixel-border),
+    0 -4px 0 0 var(--pixel-border);
+}
+
+.loading-bar-fill {
+  height: 100%;
+  width: 0%;
+  background-color: var(--green);
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 8px,
+    rgba(255, 255, 255, 0.1) 8px,
+    rgba(255, 255, 255, 0.1) 16px
+  );
+  transition: width 0.3s ease;
+  position: relative;
+}
+
+.loading-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.loading-percent {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  margin-top: var(--sp-xs);
+  letter-spacing: 1px;
+}
+
+.loading-tip {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  max-width: 300px;
+  text-align: center;
+  margin-top: var(--sp-md);
+}
+
+/* --------------------------------------------------------------------------
+   Main Menu
+   -------------------------------------------------------------------------- */
+#main-menu {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-loading);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.menu-background {
+  position: absolute;
+  inset: 0;
+  /* layered gradient to simulate sky / ground */
+  background: linear-gradient(
+    180deg,
+    var(--blue-sky) 0%,
+    var(--blue-light) 40%,
+    var(--green-pasture) 70%,
+    var(--green-grass) 80%,
+    var(--brown) 100%
+  );
+  z-index: -1;
+}
+
+.menu-background::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 0, 0, 0.03) 3px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+}
+
+.menu-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-lg);
+  z-index: 2;
+}
+
+.menu-title {
+  font-size: 4rem;
+  font-weight: bold;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 6px;
+  text-shadow:
+    0 4px 0 var(--brown-darker),
+    0 8px 0 rgba(0, 0, 0, 0.2),
+    4px 4px 0 var(--brown-darker);
+  line-height: 1.1;
+  text-align: center;
+}
+
+.menu-title-sub {
+  font-size: 1.2rem;
+  color: var(--ui-cream);
+  text-shadow: 2px 2px 0 var(--brown-darker);
+  letter-spacing: 3px;
+  margin-top: -8px;
+}
+
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-md);
+  margin-top: var(--sp-lg);
+}
+
+.menu-version {
+  position: absolute;
+  bottom: var(--sp-md);
+  right: var(--sp-md);
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.menu-decorations {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   Game Screen Layout
+   -------------------------------------------------------------------------- */
+#game-screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--green-pasture);
+}
+
+/* --- HUD (Top Bar) --- */
+.hud {
+  position: relative;
+  z-index: var(--z-hud);
+  height: var(--hud-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--sp-md);
+  background-color: rgba(62, 39, 35, 0.9);
+  border-bottom: 4px solid var(--pixel-border);
+  gap: var(--sp-md);
+  flex-shrink: 0;
+}
+
+.hud-left,
+.hud-center,
+.hud-right {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+}
+
+.hud-left {
+  min-width: 0;
+  flex: 1;
+}
+
+.hud-center {
+  flex: 0 0 auto;
+}
+
+.hud-right {
+  min-width: 0;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.hud-stat {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-xs);
+  color: var(--text-light);
+  font-size: 0.8rem;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.hud-stat-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.hud-stat-value {
+  color: var(--gold);
+}
+
+.hud-day {
+  font-size: 0.85rem;
+  color: var(--ui-cream);
+  font-weight: bold;
+  padding: 2px 12px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid var(--pixel-border-light);
+}
+
+.hud-time {
+  font-size: 0.75rem;
+  color: var(--gold-light);
+}
+
+.hud-weather-icon {
+  font-size: 1.2rem;
+}
+
+/* --- Exp Bar in HUD --- */
+.hud-exp-bar {
+  width: 100px;
+  height: 10px;
+  background-color: var(--brown-darker);
+  border: 2px solid var(--pixel-border);
+  position: relative;
+  overflow: hidden;
+}
+
+.hud-exp-bar-fill {
+  height: 100%;
+  background-color: var(--blue-light);
+  transition: width var(--transition-normal);
+}
+
+.hud-level {
+  font-size: 0.7rem;
+  color: var(--gold);
+  font-weight: bold;
+}
+
+/* --- Game World (Main Play Area) --- */
+.game-world {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* day/night cycle background transition */
+  background-color: var(--green-pasture);
+  transition: background-color 2s ease;
+}
+
+.game-world.night {
+  background-color: #1B3A1D;
+}
+
+.game-world.sunset {
+  background-color: #5D6B3D;
+}
+
+.game-world-inner {
+  position: relative;
+  transform-origin: center center;
+  transition: transform 0.1s ease;
+}
+
+/* Weather overlay layer */
+.weather-layer {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-weather);
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Day / night overlay */
+.daynight-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: calc(var(--z-weather) + 1);
+  pointer-events: none;
+  transition: background-color 3s ease;
+}
+
+.daynight-overlay.night {
+  background-color: rgba(10, 10, 40, 0.45);
+}
+
+.daynight-overlay.sunset {
+  background-color: rgba(255, 140, 0, 0.12);
+}
+
+.daynight-overlay.dawn {
+  background-color: rgba(255, 200, 100, 0.08);
+}
+
+/* --------------------------------------------------------------------------
+   Farm Grid
+   -------------------------------------------------------------------------- */
+.farm-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-cols), var(--tile-size));
+  grid-template-rows: repeat(var(--grid-rows), var(--tile-size));
+  gap: 2px;
+  background-color: var(--green-grass);
+  padding: 2px;
+  border: 4px solid var(--brown-darker);
+  box-shadow:
+    4px 4px 0 0 var(--pixel-shadow),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.05);
+  position: relative;
+  z-index: var(--z-ground);
+}
+
+.farm-tile {
+  width: var(--tile-size);
+  height: var(--tile-size);
+  background-color: var(--green-pasture);
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--transition-fast);
+  overflow: hidden;
+}
+
+.farm-tile:hover {
+  filter: brightness(1.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.farm-tile:active {
+  filter: brightness(0.95);
+  transform: scale(0.96);
+}
+
+.farm-tile.selected {
+  border-color: var(--gold);
+  border-width: 3px;
+  box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.4);
+}
+
+/* Tile crop sprite container */
+.farm-tile .crop-sprite {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-crops);
+  font-size: 1.8rem;
+  pointer-events: none;
+}
+
+/* Tile effect overlay (watering particles, etc.) */
+.farm-tile .tile-effect {
+  position: absolute;
+  inset: 0;
+  z-index: calc(var(--z-crops) + 1);
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Toolbar (Bottom)
+   -------------------------------------------------------------------------- */
+.toolbar {
+  position: relative;
+  z-index: var(--z-toolbar);
+  height: var(--toolbar-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--sp-md);
+  gap: var(--sp-sm);
+  background-color: rgba(62, 39, 35, 0.92);
+  border-top: 4px solid var(--pixel-border);
+  flex-shrink: 0;
+}
+
+.toolbar-slots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.toolbar-slot {
+  width: 52px;
+  height: 52px;
+  background-color: var(--brown-dark);
+  border: 3px solid var(--pixel-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+  font-size: 1.5rem;
+}
+
+.toolbar-slot:hover {
+  border-color: var(--gold-dark);
+  transform: translateY(-2px);
+}
+
+.toolbar-slot.active {
+  border-color: var(--gold);
+  background-color: var(--brown);
+  box-shadow:
+    0 0 0 2px var(--gold-dark),
+    0 0 12px rgba(255, 215, 0, 0.3);
+  transform: translateY(-4px);
+}
+
+.toolbar-slot-key {
+  position: absolute;
+  top: -2px;
+  right: 2px;
+  font-size: 0.55rem;
+  color: var(--text-muted);
+  font-weight: bold;
+}
+
+.toolbar-slot-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.toolbar-divider {
+  width: 3px;
+  height: 36px;
+  background-color: var(--pixel-border-light);
+  margin: 0 4px;
+}
+
+/* Quick-action buttons in toolbar */
+.toolbar-actions {
+  display: flex;
+  gap: var(--sp-xs);
+  margin-left: var(--sp-md);
+}
+
+.toolbar-action-btn {
+  width: 40px;
+  height: 40px;
+  background-color: var(--brown-dark);
+  border: 2px solid var(--pixel-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.toolbar-action-btn:hover {
+  background-color: var(--brown);
+  border-color: var(--gold-dark);
+}
+
+/* --------------------------------------------------------------------------
+   Side Panel (Seed Selection, etc.)
+   -------------------------------------------------------------------------- */
+.side-panel {
+  position: absolute;
+  top: var(--hud-height);
+  right: 0;
+  bottom: var(--toolbar-height);
+  width: var(--side-panel-width);
+  background-color: rgba(93, 64, 55, 0.95);
+  border-left: 4px solid var(--pixel-border);
+  z-index: var(--z-side-panel);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform var(--transition-normal);
+  overflow: hidden;
+}
+
+.side-panel.open {
+  transform: translateX(0);
+}
+
+.side-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sp-sm) var(--sp-md);
+  background-color: var(--brown-darker);
+  border-bottom: 3px solid var(--pixel-border);
+  color: var(--text-light);
+  font-weight: bold;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+}
+
+.side-panel-close {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  color: var(--text-light);
+  cursor: pointer;
+}
+
+.side-panel-close:hover {
+  color: var(--red-light);
+}
+
+.side-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--sp-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-sm);
+}
+
+.seed-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  padding: var(--sp-sm);
+  background-color: var(--brown);
+  border: 2px solid var(--pixel-border-light);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.seed-item:hover {
+  border-color: var(--gold-dark);
+  background-color: var(--brown-light);
+}
+
+.seed-item.selected {
+  border-color: var(--gold);
+  background-color: var(--brown-light);
+  box-shadow: inset 0 0 0 1px var(--gold-dark);
+}
+
+.seed-item-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  background-color: var(--brown-darker);
+  border: 2px solid var(--pixel-border);
+}
+
+.seed-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.seed-item-name {
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: var(--text-light);
+}
+
+.seed-item-cost {
+  font-size: 0.65rem;
+  color: var(--gold);
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Design
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  :root {
+    --tile-size: 48px;
+    --toolbar-height: 64px;
+    --hud-height: 48px;
+    --side-panel-width: 180px;
+  }
+
+  .menu-title {
+    font-size: 2.5rem;
+    letter-spacing: 3px;
+  }
+
+  .menu-title-sub {
+    font-size: 0.9rem;
+  }
+
+  .hud {
+    padding: 0 var(--sp-sm);
+    gap: var(--sp-xs);
+  }
+
+  .hud-stat {
+    font-size: 0.7rem;
+  }
+
+  .hud-exp-bar {
+    width: 60px;
+  }
+
+  .toolbar-slot {
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
+  }
+
+  .toolbar-action-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 1rem;
+  }
+
+  .loading-bar-container {
+    width: 220px;
+  }
+
+  .loading-title {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --tile-size: 40px;
+    --toolbar-height: 56px;
+    --hud-height: 44px;
+    --grid-cols: 6;
+    --grid-rows: 5;
+  }
+
+  .menu-title {
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+  }
+
+  .hud-center {
+    display: none;
+  }
+
+  .toolbar-divider {
+    display: none;
+  }
+
+  .toolbar-actions {
+    margin-left: var(--sp-xs);
+  }
+
+  .toolbar-slot {
+    width: 38px;
+    height: 38px;
+  }
+
+  .side-panel {
+    width: 100%;
+  }
+}
+
+@media (min-width: 1200px) {
+  :root {
+    --tile-size: 80px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Pixel-perfect helpers
+   -------------------------------------------------------------------------- */
+.no-smoothing {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  -ms-interpolation-mode: nearest-neighbor;
+}

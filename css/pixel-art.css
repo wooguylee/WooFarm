@@ -1,0 +1,1253 @@
+/* ==========================================================================
+   WooFarm - Pixel Art Styles
+   CSS-only pixel art sprites and pixel-themed UI elements
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Pixel Title
+   -------------------------------------------------------------------------- */
+.pixel-title {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 6px;
+  color: var(--gold);
+  text-shadow:
+    /* right */   4px 0 0 var(--brown-darker),
+    /* left */    -4px 0 0 var(--brown-darker),
+    /* bottom */  0 4px 0 var(--brown-darker),
+    /* top */     0 -4px 0 var(--brown-darker),
+    /* BR */      4px 4px 0 var(--pixel-shadow),
+    /* BL */     -4px 4px 0 var(--pixel-shadow),
+    /* TR */      4px -4px 0 var(--brown-darker),
+    /* TL */     -4px -4px 0 var(--brown-darker),
+    /* deep shadow */
+    0 8px 0 rgba(0, 0, 0, 0.25);
+  image-rendering: pixelated;
+}
+
+.pixel-title-sm {
+  font-size: 1.5rem;
+  letter-spacing: 3px;
+}
+
+.pixel-title-md {
+  font-size: 2.5rem;
+  letter-spacing: 5px;
+}
+
+.pixel-title-lg {
+  font-size: 4rem;
+  letter-spacing: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   Pixel Buttons
+   -------------------------------------------------------------------------- */
+.pixel-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-sm);
+  padding: 10px 24px;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  position: relative;
+  border: none;
+  border-radius: 0;
+  color: var(--text-light);
+  background-color: var(--brown);
+  image-rendering: pixelated;
+  transition: transform 0.08s ease, filter 0.08s ease;
+
+  /* pixel border via box-shadow (4-directional outline) */
+  box-shadow:
+    /* outer border */
+    4px 0 0 0 var(--pixel-border),
+    -4px 0 0 0 var(--pixel-border),
+    0 4px 0 0 var(--pixel-border),
+    0 -4px 0 0 var(--pixel-border),
+    /* corners */
+    4px 4px 0 0 var(--pixel-border),
+    -4px 4px 0 0 var(--pixel-border),
+    4px -4px 0 0 var(--pixel-border),
+    -4px -4px 0 0 var(--pixel-border),
+    /* bottom depth */
+    0 8px 0 0 var(--pixel-shadow),
+    4px 8px 0 0 var(--pixel-shadow),
+    -4px 8px 0 0 var(--pixel-shadow),
+    /* inner top highlight */
+    inset 0 -3px 0 0 rgba(0, 0, 0, 0.2),
+    inset 0 2px 0 0 rgba(255, 255, 255, 0.15);
+}
+
+.pixel-btn:hover {
+  filter: brightness(1.12);
+  transform: translateY(-1px);
+}
+
+.pixel-btn:active {
+  transform: translateY(4px);
+  box-shadow:
+    4px 0 0 0 var(--pixel-border),
+    -4px 0 0 0 var(--pixel-border),
+    0 4px 0 0 var(--pixel-border),
+    0 -4px 0 0 var(--pixel-border),
+    4px 4px 0 0 var(--pixel-border),
+    -4px 4px 0 0 var(--pixel-border),
+    4px -4px 0 0 var(--pixel-border),
+    -4px -4px 0 0 var(--pixel-border),
+    inset 0 2px 0 0 rgba(0, 0, 0, 0.2);
+}
+
+.pixel-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(0.4);
+  pointer-events: none;
+}
+
+/* --- Button Variants --- */
+.pixel-btn.btn-primary {
+  background-color: var(--green);
+  box-shadow:
+    4px 0 0 0 var(--green-darker),
+    -4px 0 0 0 var(--green-darker),
+    0 4px 0 0 var(--green-darker),
+    0 -4px 0 0 var(--green-darker),
+    4px 4px 0 0 var(--green-darker),
+    -4px 4px 0 0 var(--green-darker),
+    4px -4px 0 0 var(--green-darker),
+    -4px -4px 0 0 var(--green-darker),
+    0 8px 0 0 #1B5E20,
+    4px 8px 0 0 #1B5E20,
+    -4px 8px 0 0 #1B5E20,
+    inset 0 -3px 0 0 rgba(0, 0, 0, 0.2),
+    inset 0 2px 0 0 rgba(255, 255, 255, 0.2);
+}
+
+.pixel-btn.btn-primary:active {
+  box-shadow:
+    4px 0 0 0 var(--green-darker),
+    -4px 0 0 0 var(--green-darker),
+    0 4px 0 0 var(--green-darker),
+    0 -4px 0 0 var(--green-darker),
+    4px 4px 0 0 var(--green-darker),
+    -4px 4px 0 0 var(--green-darker),
+    4px -4px 0 0 var(--green-darker),
+    -4px -4px 0 0 var(--green-darker),
+    inset 0 2px 0 0 rgba(0, 0, 0, 0.2);
+}
+
+.pixel-btn.btn-secondary {
+  background-color: var(--blue);
+  box-shadow:
+    4px 0 0 0 var(--blue-dark),
+    -4px 0 0 0 var(--blue-dark),
+    0 4px 0 0 var(--blue-dark),
+    0 -4px 0 0 var(--blue-dark),
+    4px 4px 0 0 var(--blue-dark),
+    -4px 4px 0 0 var(--blue-dark),
+    4px -4px 0 0 var(--blue-dark),
+    -4px -4px 0 0 var(--blue-dark),
+    0 8px 0 0 #1565C0,
+    4px 8px 0 0 #1565C0,
+    -4px 8px 0 0 #1565C0,
+    inset 0 -3px 0 0 rgba(0, 0, 0, 0.2),
+    inset 0 2px 0 0 rgba(255, 255, 255, 0.2);
+}
+
+.pixel-btn.btn-secondary:active {
+  box-shadow:
+    4px 0 0 0 var(--blue-dark),
+    -4px 0 0 0 var(--blue-dark),
+    0 4px 0 0 var(--blue-dark),
+    0 -4px 0 0 var(--blue-dark),
+    4px 4px 0 0 var(--blue-dark),
+    -4px 4px 0 0 var(--blue-dark),
+    4px -4px 0 0 var(--blue-dark),
+    -4px -4px 0 0 var(--blue-dark),
+    inset 0 2px 0 0 rgba(0, 0, 0, 0.2);
+}
+
+.pixel-btn.btn-info {
+  background-color: #78909C;
+  color: var(--text-light);
+  box-shadow:
+    4px 0 0 0 #546E7A,
+    -4px 0 0 0 #546E7A,
+    0 4px 0 0 #546E7A,
+    0 -4px 0 0 #546E7A,
+    4px 4px 0 0 #546E7A,
+    -4px 4px 0 0 #546E7A,
+    4px -4px 0 0 #546E7A,
+    -4px -4px 0 0 #546E7A,
+    0 8px 0 0 #37474F,
+    4px 8px 0 0 #37474F,
+    -4px 8px 0 0 #37474F,
+    inset 0 -3px 0 0 rgba(0, 0, 0, 0.2),
+    inset 0 2px 0 0 rgba(255, 255, 255, 0.15);
+}
+
+.pixel-btn.btn-info:active {
+  box-shadow:
+    4px 0 0 0 #546E7A,
+    -4px 0 0 0 #546E7A,
+    0 4px 0 0 #546E7A,
+    0 -4px 0 0 #546E7A,
+    4px 4px 0 0 #546E7A,
+    -4px 4px 0 0 #546E7A,
+    4px -4px 0 0 #546E7A,
+    -4px -4px 0 0 #546E7A,
+    inset 0 2px 0 0 rgba(0, 0, 0, 0.2);
+}
+
+.pixel-btn.btn-danger {
+  background-color: var(--red);
+  box-shadow:
+    4px 0 0 0 var(--red-dark),
+    -4px 0 0 0 var(--red-dark),
+    0 4px 0 0 var(--red-dark),
+    0 -4px 0 0 var(--red-dark),
+    4px 4px 0 0 var(--red-dark),
+    -4px 4px 0 0 var(--red-dark),
+    4px -4px 0 0 var(--red-dark),
+    -4px -4px 0 0 var(--red-dark),
+    0 8px 0 0 #B71C1C,
+    4px 8px 0 0 #B71C1C,
+    -4px 8px 0 0 #B71C1C,
+    inset 0 -3px 0 0 rgba(0, 0, 0, 0.2),
+    inset 0 2px 0 0 rgba(255, 255, 255, 0.2);
+}
+
+.pixel-btn.btn-danger:active {
+  box-shadow:
+    4px 0 0 0 var(--red-dark),
+    -4px 0 0 0 var(--red-dark),
+    0 4px 0 0 var(--red-dark),
+    0 -4px 0 0 var(--red-dark),
+    4px 4px 0 0 var(--red-dark),
+    -4px 4px 0 0 var(--red-dark),
+    4px -4px 0 0 var(--red-dark),
+    -4px -4px 0 0 var(--red-dark),
+    inset 0 2px 0 0 rgba(0, 0, 0, 0.2);
+}
+
+/* Small and large button sizes */
+.pixel-btn.btn-sm {
+  padding: 6px 14px;
+  font-size: 0.7rem;
+}
+
+.pixel-btn.btn-lg {
+  padding: 14px 36px;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Pixel Character (Player Sprite via CSS)
+   -------------------------------------------------------------------------- */
+.pixel-character {
+  width: 32px;
+  height: 32px;
+  position: relative;
+  image-rendering: pixelated;
+}
+
+/* 
+  Simple farmer character built with box-shadow pixel art.
+  Each "pixel" is 4x4. The character is 8x8 pixels = 32x32.
+  Origin starts at top-left; box-shadow offsets from there.
+*/
+.pixel-character::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  background: transparent;
+  box-shadow:
+    /* Hat (brown) row 0 */
+    8px 0 0 0 var(--brown),
+    12px 0 0 0 var(--brown),
+    16px 0 0 0 var(--brown),
+    /* Hat brim row 1 */
+    4px 4px 0 0 var(--brown-dark),
+    8px 4px 0 0 var(--brown),
+    12px 4px 0 0 var(--brown),
+    16px 4px 0 0 var(--brown),
+    20px 4px 0 0 var(--brown-dark),
+    /* Face row 2 */
+    8px 8px 0 0 #FFCC80,
+    12px 8px 0 0 #FFCC80,
+    16px 8px 0 0 #FFCC80,
+    /* Eyes row 3 */
+    8px 12px 0 0 #FFCC80,
+    12px 12px 0 0 var(--pixel-border),
+    16px 12px 0 0 #FFCC80,
+    /* Body (blue overalls) row 4 */
+    4px 16px 0 0 var(--blue),
+    8px 16px 0 0 var(--blue),
+    12px 16px 0 0 var(--gold),
+    16px 16px 0 0 var(--blue),
+    20px 16px 0 0 var(--blue),
+    /* Body row 5 */
+    4px 20px 0 0 var(--blue),
+    8px 20px 0 0 var(--blue),
+    12px 20px 0 0 var(--blue),
+    16px 20px 0 0 var(--blue),
+    20px 20px 0 0 var(--blue),
+    /* Legs row 6 */
+    8px 24px 0 0 var(--blue-dark),
+    12px 24px 0 0 transparent,
+    16px 24px 0 0 var(--blue-dark),
+    /* Boots row 7 */
+    8px 28px 0 0 var(--brown-darker),
+    16px 28px 0 0 var(--brown-darker);
+}
+
+/* --------------------------------------------------------------------------
+   Farm Tile Variants
+   -------------------------------------------------------------------------- */
+
+/* Empty grass tile */
+.tile-empty {
+  background-color: #7CB342;
+  background-image:
+    radial-gradient(circle at 20% 40%, #8BC34A 1px, transparent 1px),
+    radial-gradient(circle at 70% 70%, #689F38 1px, transparent 1px),
+    radial-gradient(circle at 50% 20%, #8BC34A 1px, transparent 1px);
+}
+
+/* Tilled soil */
+.tile-tilled {
+  background-color: #6D4C41;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 6px,
+    rgba(0, 0, 0, 0.12) 6px,
+    rgba(0, 0, 0, 0.12) 8px
+  );
+}
+
+.tile-tilled::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 4px,
+    rgba(78, 52, 46, 0.5) 4px,
+    rgba(78, 52, 46, 0.5) 6px
+  );
+}
+
+/* Watered soil (darker, wet look) */
+.tile-watered {
+  background-color: #4E342E;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 6px,
+    rgba(0, 0, 0, 0.15) 6px,
+    rgba(0, 0, 0, 0.15) 8px
+  );
+}
+
+.tile-watered::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: rgba(41, 182, 246, 0.1);
+  pointer-events: none;
+}
+
+/* Planted (seed visible) */
+.tile-planted {
+  background-color: #5D4037;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 6px,
+    rgba(0, 0, 0, 0.1) 6px,
+    rgba(0, 0, 0, 0.1) 8px
+  );
+}
+
+/* Tile with seed dot */
+.tile-planted::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background-color: #A1887F;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Growing stages */
+.tile-growing-1 {
+  background-color: #5D4037;
+}
+
+/* Small sprout - single stem via box-shadow */
+.tile-growing-1::after {
+  content: '';
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background: transparent;
+  box-shadow:
+    0 0 0 0 var(--green),
+    0 4px 0 0 var(--green-dark);
+}
+
+.tile-growing-2 {
+  background-color: #5D4037;
+}
+
+/* Medium plant */
+.tile-growing-2::after {
+  content: '';
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background: transparent;
+  box-shadow:
+    -4px -4px 0 0 var(--green),
+    0 -4px 0 0 var(--green-light),
+    4px -4px 0 0 var(--green),
+    0 0 0 0 var(--green-dark),
+    0 4px 0 0 var(--green-dark),
+    0 8px 0 0 var(--brown);
+}
+
+.tile-growing-3 {
+  background-color: #5D4037;
+}
+
+/* Tall plant */
+.tile-growing-3::after {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background: transparent;
+  box-shadow:
+    -4px -12px 0 0 var(--green),
+    0 -12px 0 0 var(--green-light),
+    4px -12px 0 0 var(--green),
+    -8px -8px 0 0 var(--green),
+    -4px -8px 0 0 var(--green-light),
+    0 -8px 0 0 var(--green-light),
+    4px -8px 0 0 var(--green-light),
+    8px -8px 0 0 var(--green),
+    -4px -4px 0 0 var(--green),
+    0 -4px 0 0 var(--green-dark),
+    4px -4px 0 0 var(--green),
+    0 0 0 0 var(--green-darker),
+    0 4px 0 0 var(--brown);
+}
+
+.tile-growing-4 {
+  background-color: #5D4037;
+}
+
+/* Almost ready - flower/fruit buds */
+.tile-growing-4::after {
+  content: '';
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background: transparent;
+  box-shadow:
+    0 -16px 0 0 var(--gold),
+    -4px -12px 0 0 var(--green),
+    0 -12px 0 0 var(--green-light),
+    4px -12px 0 0 var(--green),
+    -8px -8px 0 0 var(--green),
+    -4px -8px 0 0 var(--green-light),
+    0 -8px 0 0 var(--green-light),
+    4px -8px 0 0 var(--green-light),
+    8px -8px 0 0 var(--green),
+    -4px -4px 0 0 var(--green),
+    0 -4px 0 0 var(--green-dark),
+    4px -4px 0 0 var(--green),
+    0 0 0 0 var(--green-darker),
+    0 4px 0 0 var(--brown);
+}
+
+/* Ready to harvest (bright, full crop) */
+.tile-ready {
+  background-color: #5D4037;
+}
+
+.tile-ready::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background: transparent;
+  box-shadow:
+    -4px -20px 0 0 var(--red),
+    0 -20px 0 0 var(--red),
+    4px -20px 0 0 var(--red),
+    0 -16px 0 0 var(--gold),
+    -4px -12px 0 0 var(--green),
+    0 -12px 0 0 var(--green-light),
+    4px -12px 0 0 var(--green),
+    -8px -8px 0 0 var(--green),
+    -4px -8px 0 0 var(--green-light),
+    0 -8px 0 0 var(--green-light),
+    4px -8px 0 0 var(--green-light),
+    8px -8px 0 0 var(--green),
+    -4px -4px 0 0 var(--green),
+    0 -4px 0 0 var(--green-dark),
+    4px -4px 0 0 var(--green),
+    0 0 0 0 var(--green-darker),
+    0 4px 0 0 var(--brown);
+}
+
+.tile-ready::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 30%, rgba(255, 215, 0, 0.15), transparent 60%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* --------------------------------------------------------------------------
+   Pixel Art Crop Sprites (box-shadow technique)
+   Placed inside .crop-sprite containers on tiles
+   -------------------------------------------------------------------------- */
+.crop-wheat,
+.crop-carrot,
+.crop-tomato,
+.crop-corn,
+.crop-pumpkin,
+.crop-strawberry {
+  position: relative;
+  width: 4px;
+  height: 4px;
+  background: transparent;
+  image-rendering: pixelated;
+}
+
+/* Wheat */
+.crop-wheat {
+  box-shadow:
+    0 -12px 0 0 #FDD835,
+    -4px -8px 0 0 #FDD835,
+    0 -8px 0 0 #F9A825,
+    4px -8px 0 0 #FDD835,
+    0 -4px 0 0 var(--green-dark),
+    0 0 0 0 var(--green-dark);
+}
+
+/* Carrot */
+.crop-carrot {
+  box-shadow:
+    -4px -8px 0 0 var(--green),
+    0 -8px 0 0 var(--green),
+    4px -8px 0 0 var(--green),
+    0 -4px 0 0 #FF9800,
+    0 0 0 0 #F57C00,
+    0 4px 0 0 #E65100;
+}
+
+/* Tomato */
+.crop-tomato {
+  box-shadow:
+    0 -8px 0 0 var(--green),
+    -4px -4px 0 0 #F44336,
+    0 -4px 0 0 #EF5350,
+    4px -4px 0 0 #F44336,
+    -4px 0 0 0 #E53935,
+    0 0 0 0 #EF5350,
+    4px 0 0 0 #E53935,
+    0 4px 0 0 #C62828;
+}
+
+/* Corn */
+.crop-corn {
+  box-shadow:
+    0 -16px 0 0 var(--green),
+    -4px -12px 0 0 var(--green),
+    0 -12px 0 0 #FDD835,
+    4px -12px 0 0 var(--green),
+    0 -8px 0 0 #FDD835,
+    4px -8px 0 0 #F9A825,
+    0 -4px 0 0 #F9A825,
+    0 0 0 0 var(--green-dark),
+    0 4px 0 0 var(--green-dark);
+}
+
+/* Pumpkin */
+.crop-pumpkin {
+  box-shadow:
+    0 -8px 0 0 var(--green),
+    -4px -4px 0 0 #FF9800,
+    0 -4px 0 0 #FFB74D,
+    4px -4px 0 0 #FF9800,
+    -8px 0 0 0 #F57C00,
+    -4px 0 0 0 #FFB74D,
+    0 0 0 0 #FFB74D,
+    4px 0 0 0 #FFB74D,
+    8px 0 0 0 #F57C00,
+    -4px 4px 0 0 #EF6C00,
+    0 4px 0 0 #F57C00,
+    4px 4px 0 0 #EF6C00;
+}
+
+/* Strawberry */
+.crop-strawberry {
+  box-shadow:
+    -4px -8px 0 0 var(--green),
+    0 -8px 0 0 var(--green),
+    4px -8px 0 0 var(--green),
+    -4px -4px 0 0 #E53935,
+    0 -4px 0 0 #EF5350,
+    4px -4px 0 0 #E53935,
+    -4px 0 0 0 #EF5350,
+    0 0 0 0 #FFCDD2,
+    4px 0 0 0 #EF5350,
+    0 4px 0 0 #C62828;
+}
+
+/* --------------------------------------------------------------------------
+   Pixel Art Animals
+   All animals are 8x8 "pixels" (4px each = 32x32 total)
+   -------------------------------------------------------------------------- */
+
+/* --- Chicken --- */
+.pixel-chicken {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+}
+
+.pixel-chicken::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  background: transparent;
+  box-shadow:
+    /* Comb (red) */
+    12px 0 0 0 #F44336,
+    /* Head (white) row 1 */
+    8px 4px 0 0 #FAFAFA,
+    12px 4px 0 0 #FAFAFA,
+    16px 4px 0 0 #FAFAFA,
+    /* Eye & beak row 2 */
+    8px 8px 0 0 #FAFAFA,
+    12px 8px 0 0 #212121,
+    16px 8px 0 0 #FF9800,
+    /* Body row 3 */
+    4px 12px 0 0 #FAFAFA,
+    8px 12px 0 0 #FAFAFA,
+    12px 12px 0 0 #FAFAFA,
+    16px 12px 0 0 #FAFAFA,
+    /* Body row 4 */
+    4px 16px 0 0 #FAFAFA,
+    8px 16px 0 0 #F5F5F5,
+    12px 16px 0 0 #F5F5F5,
+    16px 16px 0 0 #FAFAFA,
+    /* Tail row (white) */
+    0 20px 0 0 #FAFAFA,
+    4px 20px 0 0 #F5F5F5,
+    /* Feet row */
+    8px 24px 0 0 #FF9800,
+    16px 24px 0 0 #FF9800;
+}
+
+/* --- Cow --- */
+.pixel-cow {
+  position: relative;
+  width: 40px;
+  height: 32px;
+  image-rendering: pixelated;
+}
+
+.pixel-cow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  background: transparent;
+  box-shadow:
+    /* Ears */
+    4px 0 0 0 #FAFAFA,
+    20px 0 0 0 #FAFAFA,
+    /* Head row 1 */
+    8px 4px 0 0 #FAFAFA,
+    12px 4px 0 0 #FAFAFA,
+    16px 4px 0 0 #FAFAFA,
+    /* Eyes row 2 */
+    8px 8px 0 0 #212121,
+    12px 8px 0 0 #FAFAFA,
+    16px 8px 0 0 #212121,
+    /* Nose row 3 */
+    8px 12px 0 0 #FAFAFA,
+    12px 12px 0 0 #FFCCBC,
+    16px 12px 0 0 #FAFAFA,
+    /* Body row 4 (black and white spots) */
+    4px 16px 0 0 #FAFAFA,
+    8px 16px 0 0 #212121,
+    12px 16px 0 0 #FAFAFA,
+    16px 16px 0 0 #212121,
+    20px 16px 0 0 #FAFAFA,
+    24px 16px 0 0 #FAFAFA,
+    /* Body row 5 */
+    4px 20px 0 0 #FAFAFA,
+    8px 20px 0 0 #FAFAFA,
+    12px 20px 0 0 #212121,
+    16px 20px 0 0 #FAFAFA,
+    20px 20px 0 0 #FAFAFA,
+    24px 20px 0 0 #FAFAFA,
+    /* Legs row 6 */
+    4px 24px 0 0 #FAFAFA,
+    8px 24px 0 0 transparent,
+    12px 24px 0 0 transparent,
+    16px 24px 0 0 transparent,
+    20px 24px 0 0 #FAFAFA,
+    /* Hooves */
+    4px 28px 0 0 #795548,
+    20px 28px 0 0 #795548;
+}
+
+/* --- Sheep --- */
+.pixel-sheep {
+  position: relative;
+  width: 36px;
+  height: 32px;
+  image-rendering: pixelated;
+}
+
+.pixel-sheep::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  background: transparent;
+  box-shadow:
+    /* Wool top */
+    8px 0 0 0 #F5F5F5,
+    12px 0 0 0 #EEEEEE,
+    16px 0 0 0 #F5F5F5,
+    /* Head row 1 */
+    4px 4px 0 0 #F5F5F5,
+    8px 4px 0 0 #E0E0E0,
+    12px 4px 0 0 #EEEEEE,
+    16px 4px 0 0 #E0E0E0,
+    20px 4px 0 0 #F5F5F5,
+    /* Face row 2 */
+    8px 8px 0 0 #D7CCC8,
+    12px 8px 0 0 #212121,
+    16px 8px 0 0 #D7CCC8,
+    /* Face row 3 */
+    8px 12px 0 0 #D7CCC8,
+    12px 12px 0 0 #FFCCBC,
+    16px 12px 0 0 #D7CCC8,
+    /* Wool body row 4 */
+    4px 16px 0 0 #EEEEEE,
+    8px 16px 0 0 #F5F5F5,
+    12px 16px 0 0 #EEEEEE,
+    16px 16px 0 0 #F5F5F5,
+    20px 16px 0 0 #EEEEEE,
+    /* Wool body row 5 */
+    4px 20px 0 0 #F5F5F5,
+    8px 20px 0 0 #EEEEEE,
+    12px 20px 0 0 #F5F5F5,
+    16px 20px 0 0 #EEEEEE,
+    20px 20px 0 0 #F5F5F5,
+    /* Legs */
+    8px 24px 0 0 #5D4037,
+    16px 24px 0 0 #5D4037,
+    8px 28px 0 0 #3E2723,
+    16px 28px 0 0 #3E2723;
+}
+
+/* --- Pig --- */
+.pixel-pig {
+  position: relative;
+  width: 36px;
+  height: 32px;
+  image-rendering: pixelated;
+}
+
+.pixel-pig::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  background: transparent;
+  box-shadow:
+    /* Ears */
+    4px 0 0 0 #F48FB1,
+    20px 0 0 0 #F48FB1,
+    /* Head row 1 */
+    8px 4px 0 0 #F48FB1,
+    12px 4px 0 0 #F8BBD0,
+    16px 4px 0 0 #F48FB1,
+    /* Eyes row 2 */
+    8px 8px 0 0 #212121,
+    12px 8px 0 0 #F8BBD0,
+    16px 8px 0 0 #212121,
+    /* Snout row 3 */
+    8px 12px 0 0 #F48FB1,
+    12px 12px 0 0 #EC407A,
+    16px 12px 0 0 #F48FB1,
+    /* Body row 4 */
+    4px 16px 0 0 #F48FB1,
+    8px 16px 0 0 #F8BBD0,
+    12px 16px 0 0 #F8BBD0,
+    16px 16px 0 0 #F8BBD0,
+    20px 16px 0 0 #F48FB1,
+    /* Body row 5 */
+    4px 20px 0 0 #F48FB1,
+    8px 20px 0 0 #F8BBD0,
+    12px 20px 0 0 #F8BBD0,
+    16px 20px 0 0 #F8BBD0,
+    20px 20px 0 0 #F48FB1,
+    /* Curly tail */
+    24px 16px 0 0 #EC407A,
+    28px 12px 0 0 #EC407A,
+    /* Legs */
+    8px 24px 0 0 #EC407A,
+    16px 24px 0 0 #EC407A,
+    8px 28px 0 0 #AD1457,
+    16px 28px 0 0 #AD1457;
+}
+
+/* --------------------------------------------------------------------------
+   Pixel Art Buildings / Decorations
+   -------------------------------------------------------------------------- */
+
+/* Fence post */
+.pixel-fence {
+  position: relative;
+  width: 32px;
+  height: 24px;
+  image-rendering: pixelated;
+}
+
+.pixel-fence::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  background: transparent;
+  box-shadow:
+    /* Post left */
+    0 0 0 0 #8D6E63,
+    0 4px 0 0 #8D6E63,
+    0 8px 0 0 #8D6E63,
+    0 12px 0 0 #6D4C41,
+    0 16px 0 0 #6D4C41,
+    /* Post right */
+    24px 0 0 0 #8D6E63,
+    24px 4px 0 0 #8D6E63,
+    24px 8px 0 0 #8D6E63,
+    24px 12px 0 0 #6D4C41,
+    24px 16px 0 0 #6D4C41,
+    /* Rail top */
+    4px 4px 0 0 #A1887F,
+    8px 4px 0 0 #A1887F,
+    12px 4px 0 0 #A1887F,
+    16px 4px 0 0 #A1887F,
+    20px 4px 0 0 #A1887F,
+    /* Rail bottom */
+    4px 12px 0 0 #A1887F,
+    8px 12px 0 0 #A1887F,
+    12px 12px 0 0 #A1887F,
+    16px 12px 0 0 #A1887F,
+    20px 12px 0 0 #A1887F;
+}
+
+/* Barn */
+.pixel-barn {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  image-rendering: pixelated;
+}
+
+.pixel-barn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  background: transparent;
+  box-shadow:
+    /* Roof peak */
+    20px 0 0 0 #D32F2F,
+    24px 0 0 0 #D32F2F,
+    /* Roof row 1 */
+    16px 4px 0 0 #D32F2F,
+    20px 4px 0 0 #E53935,
+    24px 4px 0 0 #E53935,
+    28px 4px 0 0 #D32F2F,
+    /* Roof row 2 */
+    12px 8px 0 0 #D32F2F,
+    16px 8px 0 0 #E53935,
+    20px 8px 0 0 #EF5350,
+    24px 8px 0 0 #EF5350,
+    28px 8px 0 0 #E53935,
+    32px 8px 0 0 #D32F2F,
+    /* Roof row 3 */
+    8px 12px 0 0 #C62828,
+    12px 12px 0 0 #D32F2F,
+    16px 12px 0 0 #E53935,
+    20px 12px 0 0 #E53935,
+    24px 12px 0 0 #E53935,
+    28px 12px 0 0 #E53935,
+    32px 12px 0 0 #D32F2F,
+    36px 12px 0 0 #C62828,
+    /* Wall rows */
+    8px 16px 0 0 #8D6E63,
+    12px 16px 0 0 #A1887F,
+    16px 16px 0 0 #A1887F,
+    20px 16px 0 0 #A1887F,
+    24px 16px 0 0 #A1887F,
+    28px 16px 0 0 #A1887F,
+    32px 16px 0 0 #A1887F,
+    36px 16px 0 0 #8D6E63,
+    /* Wall row with window */
+    8px 20px 0 0 #8D6E63,
+    12px 20px 0 0 #A1887F,
+    16px 20px 0 0 #64B5F6,
+    20px 20px 0 0 #A1887F,
+    24px 20px 0 0 #A1887F,
+    28px 20px 0 0 #64B5F6,
+    32px 20px 0 0 #A1887F,
+    36px 20px 0 0 #8D6E63,
+    /* Wall row */
+    8px 24px 0 0 #8D6E63,
+    12px 24px 0 0 #A1887F,
+    16px 24px 0 0 #A1887F,
+    20px 24px 0 0 #A1887F,
+    24px 24px 0 0 #A1887F,
+    28px 24px 0 0 #A1887F,
+    32px 24px 0 0 #A1887F,
+    36px 24px 0 0 #8D6E63,
+    /* Door row */
+    8px 28px 0 0 #6D4C41,
+    12px 28px 0 0 #A1887F,
+    16px 28px 0 0 #A1887F,
+    20px 28px 0 0 #5D4037,
+    24px 28px 0 0 #5D4037,
+    28px 28px 0 0 #A1887F,
+    32px 28px 0 0 #A1887F,
+    36px 28px 0 0 #6D4C41,
+    /* Door bottom */
+    8px 32px 0 0 #6D4C41,
+    12px 32px 0 0 #8D6E63,
+    16px 32px 0 0 #8D6E63,
+    20px 32px 0 0 #5D4037,
+    24px 32px 0 0 #5D4037,
+    28px 32px 0 0 #8D6E63,
+    32px 32px 0 0 #8D6E63,
+    36px 32px 0 0 #6D4C41;
+}
+
+/* Well */
+.pixel-well {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+}
+
+.pixel-well::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  background: transparent;
+  box-shadow:
+    /* Roof */
+    12px 0 0 0 #795548,
+    /* Supports */
+    4px 4px 0 0 #8D6E63,
+    20px 4px 0 0 #8D6E63,
+    8px 4px 0 0 #795548,
+    12px 4px 0 0 #795548,
+    16px 4px 0 0 #795548,
+    4px 8px 0 0 #8D6E63,
+    20px 8px 0 0 #8D6E63,
+    /* Stone wall */
+    4px 12px 0 0 #9E9E9E,
+    8px 12px 0 0 #BDBDBD,
+    12px 12px 0 0 #9E9E9E,
+    16px 12px 0 0 #BDBDBD,
+    20px 12px 0 0 #9E9E9E,
+    4px 16px 0 0 #BDBDBD,
+    8px 16px 0 0 #9E9E9E,
+    12px 16px 0 0 #64B5F6,
+    16px 16px 0 0 #9E9E9E,
+    20px 16px 0 0 #BDBDBD,
+    4px 20px 0 0 #9E9E9E,
+    8px 20px 0 0 #BDBDBD,
+    12px 20px 0 0 #BDBDBD,
+    16px 20px 0 0 #BDBDBD,
+    20px 20px 0 0 #9E9E9E;
+}
+
+/* Tree */
+.pixel-tree {
+  position: relative;
+  width: 32px;
+  height: 40px;
+  image-rendering: pixelated;
+}
+
+.pixel-tree::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  background: transparent;
+  box-shadow:
+    /* Canopy row 0 */
+    12px 0 0 0 #2E7D32,
+    /* Canopy row 1 */
+    8px 4px 0 0 #388E3C,
+    12px 4px 0 0 #4CAF50,
+    16px 4px 0 0 #388E3C,
+    /* Canopy row 2 */
+    4px 8px 0 0 #2E7D32,
+    8px 8px 0 0 #4CAF50,
+    12px 8px 0 0 #66BB6A,
+    16px 8px 0 0 #4CAF50,
+    20px 8px 0 0 #2E7D32,
+    /* Canopy row 3 */
+    4px 12px 0 0 #388E3C,
+    8px 12px 0 0 #4CAF50,
+    12px 12px 0 0 #66BB6A,
+    16px 12px 0 0 #4CAF50,
+    20px 12px 0 0 #388E3C,
+    /* Canopy row 4 */
+    8px 16px 0 0 #2E7D32,
+    12px 16px 0 0 #388E3C,
+    16px 16px 0 0 #2E7D32,
+    /* Trunk */
+    12px 20px 0 0 #6D4C41,
+    12px 24px 0 0 #6D4C41,
+    12px 28px 0 0 #5D4037,
+    12px 32px 0 0 #5D4037;
+}
+
+/* Flower decoration */
+.pixel-flower {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated;
+}
+
+.pixel-flower::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  background: transparent;
+  box-shadow:
+    4px 0 0 0 #F44336,
+    0 4px 0 0 #F44336,
+    4px 4px 0 0 #FFEB3B,
+    8px 4px 0 0 #F44336,
+    4px 8px 0 0 #4CAF50,
+    4px 12px 0 0 #388E3C;
+}
+
+/* --------------------------------------------------------------------------
+   Pixel Cloud & Sun (Menu Decorations)
+   -------------------------------------------------------------------------- */
+.pixel-cloud {
+  position: absolute;
+  width: 48px;
+  height: 20px;
+  image-rendering: pixelated;
+}
+
+.pixel-cloud::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  background: transparent;
+  box-shadow:
+    /* Row 0 */
+    8px 0 0 0 #FAFAFA,
+    12px 0 0 0 #FAFAFA,
+    24px 0 0 0 #FAFAFA,
+    28px 0 0 0 #FAFAFA,
+    /* Row 1 */
+    4px 4px 0 0 #FAFAFA,
+    8px 4px 0 0 #FFFFFF,
+    12px 4px 0 0 #FFFFFF,
+    16px 4px 0 0 #FAFAFA,
+    20px 4px 0 0 #FAFAFA,
+    24px 4px 0 0 #FFFFFF,
+    28px 4px 0 0 #FFFFFF,
+    32px 4px 0 0 #FAFAFA,
+    /* Row 2 */
+    0 8px 0 0 #F5F5F5,
+    4px 8px 0 0 #FFFFFF,
+    8px 8px 0 0 #FFFFFF,
+    12px 8px 0 0 #FFFFFF,
+    16px 8px 0 0 #FFFFFF,
+    20px 8px 0 0 #FFFFFF,
+    24px 8px 0 0 #FFFFFF,
+    28px 8px 0 0 #FFFFFF,
+    32px 8px 0 0 #FFFFFF,
+    36px 8px 0 0 #F5F5F5,
+    /* Row 3 */
+    4px 12px 0 0 #F5F5F5,
+    8px 12px 0 0 #F5F5F5,
+    12px 12px 0 0 #F5F5F5,
+    16px 12px 0 0 #F5F5F5,
+    20px 12px 0 0 #F5F5F5,
+    24px 12px 0 0 #F5F5F5,
+    28px 12px 0 0 #F5F5F5,
+    32px 12px 0 0 #F5F5F5;
+}
+
+.pixel-sun {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  image-rendering: pixelated;
+}
+
+.pixel-sun::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  background: transparent;
+  box-shadow:
+    /* Rays top */
+    16px 0 0 0 #FDD835,
+    /* Rays sides */
+    0 16px 0 0 #FDD835,
+    32px 16px 0 0 #FDD835,
+    /* Ray bottom */
+    16px 32px 0 0 #FDD835,
+    /* Diagonal rays */
+    4px 4px 0 0 #FDD835,
+    28px 4px 0 0 #FDD835,
+    4px 28px 0 0 #FDD835,
+    28px 28px 0 0 #FDD835,
+    /* Core row 0 */
+    12px 8px 0 0 #FFEE58,
+    16px 8px 0 0 #FFEE58,
+    20px 8px 0 0 #FFEE58,
+    /* Core row 1 */
+    8px 12px 0 0 #FFEE58,
+    12px 12px 0 0 #FFF176,
+    16px 12px 0 0 #FFF9C4,
+    20px 12px 0 0 #FFF176,
+    24px 12px 0 0 #FFEE58,
+    /* Core row 2 */
+    8px 16px 0 0 #FFEE58,
+    12px 16px 0 0 #FFF176,
+    16px 16px 0 0 #FFF9C4,
+    20px 16px 0 0 #FFF176,
+    24px 16px 0 0 #FFEE58,
+    /* Core row 3 */
+    8px 20px 0 0 #FFEE58,
+    12px 20px 0 0 #FFF176,
+    16px 20px 0 0 #FFF176,
+    20px 20px 0 0 #FFF176,
+    24px 20px 0 0 #FFEE58,
+    /* Core row 4 */
+    12px 24px 0 0 #FFEE58,
+    16px 24px 0 0 #FFEE58,
+    20px 24px 0 0 #FFEE58;
+}
+
+/* --------------------------------------------------------------------------
+   Pixel Art Emoji Fallback Tiles
+   For browsers/scenarios where box-shadow art is too expensive, use emoji
+   -------------------------------------------------------------------------- */
+.emoji-crop { font-size: 1.6rem; line-height: 1; text-align: center; }
+.emoji-crop-wheat::after { content: '\1F33E'; }
+.emoji-crop-carrot::after { content: '\1F955'; }
+.emoji-crop-tomato::after { content: '\1F345'; }
+.emoji-crop-corn::after { content: '\1F33D'; }
+.emoji-crop-pumpkin::after { content: '\1F383'; }
+.emoji-crop-strawberry::after { content: '\1F353'; }
+
+.emoji-animal { font-size: 1.8rem; line-height: 1; text-align: center; }
+.emoji-chicken::after { content: '\1F414'; }
+.emoji-cow::after { content: '\1F404'; }
+.emoji-sheep::after { content: '\1F411'; }
+.emoji-pig::after { content: '\1F437'; }
+
+.emoji-tool { font-size: 1.4rem; line-height: 1; }
+.emoji-hoe::after { content: '\2692\FE0F'; }
+.emoji-water::after { content: '\1F4A7'; }
+.emoji-seed::after { content: '\1F331'; }
+.emoji-harvest::after { content: '\1F33E'; }
+.emoji-axe::after { content: '\1FA93'; }
+
+/* --------------------------------------------------------------------------
+   Global pixel rendering hint
+   -------------------------------------------------------------------------- */
+[class*="pixel-"],
+[class*="tile-"],
+[class*="crop-"] {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}

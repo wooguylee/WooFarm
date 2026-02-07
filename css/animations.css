@@ -1,0 +1,919 @@
+/* ==========================================================================
+   WooFarm - Animations & Keyframes
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Crop Growth Animation
+   -------------------------------------------------------------------------- */
+@keyframes crop-grow {
+  0% {
+    transform: scale(0.3) translateY(8px);
+    opacity: 0;
+  }
+  40% {
+    transform: scale(1.15) translateY(-2px);
+    opacity: 1;
+  }
+  60% {
+    transform: scale(0.95) translateY(1px);
+  }
+  80% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.anim-crop-grow {
+  animation: crop-grow 0.5s ease-out forwards;
+}
+
+/* Stage transition (subtle pulse) */
+@keyframes crop-stage-up {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.2); }
+  60% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+.anim-crop-stage {
+  animation: crop-stage-up 0.4s ease-out;
+}
+
+/* --------------------------------------------------------------------------
+   Watering Effect (Blue Droplets)
+   -------------------------------------------------------------------------- */
+@keyframes water-drop {
+  0% {
+    transform: translateY(-20px) scale(1);
+    opacity: 1;
+  }
+  70% {
+    transform: translateY(10px) scale(0.8);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(16px) scale(0.3);
+    opacity: 0;
+  }
+}
+
+@keyframes water-splash {
+  0% {
+    transform: scale(0);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.water-droplet {
+  position: absolute;
+  width: 6px;
+  height: 8px;
+  background-color: var(--blue-water);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  animation: water-drop 0.6s ease-in forwards;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.water-droplet:nth-child(2) { left: 25%; animation-delay: 0.08s; }
+.water-droplet:nth-child(3) { left: 50%; animation-delay: 0.16s; }
+.water-droplet:nth-child(4) { left: 75%; animation-delay: 0.12s; }
+.water-droplet:nth-child(5) { left: 40%; animation-delay: 0.2s; }
+
+.water-splash-ring {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%) scale(0);
+  width: 20px;
+  height: 8px;
+  border: 2px solid var(--blue-water);
+  border-radius: 50%;
+  animation: water-splash 0.5s ease-out 0.4s forwards;
+  pointer-events: none;
+  z-index: 50;
+}
+
+/* --------------------------------------------------------------------------
+   Harvest Sparkle Effect
+   -------------------------------------------------------------------------- */
+@keyframes sparkle {
+  0% {
+    transform: scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1) rotate(180deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes sparkle-float {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--sx, 10px), var(--sy, -20px)) scale(0);
+    opacity: 0;
+  }
+}
+
+.sparkle-particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background-color: var(--gold);
+  pointer-events: none;
+  z-index: 60;
+  animation: sparkle 0.6s ease-out forwards;
+}
+
+.sparkle-particle:nth-child(1) { top: 20%; left: 20%; animation-delay: 0s; }
+.sparkle-particle:nth-child(2) { top: 10%; left: 60%; animation-delay: 0.1s; }
+.sparkle-particle:nth-child(3) { top: 50%; left: 80%; animation-delay: 0.05s; }
+.sparkle-particle:nth-child(4) { top: 60%; left: 30%; animation-delay: 0.15s; }
+.sparkle-particle:nth-child(5) { top: 30%; left: 50%; animation-delay: 0.08s; }
+.sparkle-particle:nth-child(6) { top: 70%; left: 70%; animation-delay: 0.12s; }
+
+.sparkle-particle.star {
+  background: transparent;
+  box-shadow:
+    2px 0 0 0 var(--gold),
+    -2px 0 0 0 var(--gold),
+    0 2px 0 0 var(--gold),
+    0 -2px 0 0 var(--gold);
+}
+
+/* --------------------------------------------------------------------------
+   Cloud Floating (Menu Background)
+   -------------------------------------------------------------------------- */
+@keyframes cloud-float {
+  0% {
+    transform: translateX(-120px);
+  }
+  100% {
+    transform: translateX(calc(100vw + 120px));
+  }
+}
+
+@keyframes cloud-float-reverse {
+  0% {
+    transform: translateX(calc(100vw + 120px));
+  }
+  100% {
+    transform: translateX(-120px);
+  }
+}
+
+.anim-cloud {
+  animation: cloud-float 40s linear infinite;
+}
+
+.anim-cloud-slow {
+  animation: cloud-float 60s linear infinite;
+}
+
+.anim-cloud-reverse {
+  animation: cloud-float-reverse 50s linear infinite;
+}
+
+/* --------------------------------------------------------------------------
+   Sun Rotation / Glow
+   -------------------------------------------------------------------------- */
+@keyframes sun-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes sun-glow {
+  0%, 100% {
+    filter: brightness(1) drop-shadow(0 0 8px rgba(255, 235, 59, 0.4));
+  }
+  50% {
+    filter: brightness(1.15) drop-shadow(0 0 16px rgba(255, 235, 59, 0.7));
+  }
+}
+
+@keyframes sun-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+.anim-sun {
+  animation: sun-rotate 60s linear infinite, sun-glow 3s ease-in-out infinite;
+}
+
+.anim-sun-pulse {
+  animation: sun-pulse 4s ease-in-out infinite;
+}
+
+/* --------------------------------------------------------------------------
+   Character Idle Animation
+   -------------------------------------------------------------------------- */
+@keyframes idle-bob {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes idle-blink {
+  0%, 90%, 100% { opacity: 1; }
+  95% { opacity: 0; }
+}
+
+.anim-idle {
+  animation: idle-bob 1.5s ease-in-out infinite;
+}
+
+.anim-blink {
+  animation: idle-blink 4s ease-in-out infinite;
+}
+
+/* Character walk */
+@keyframes walk-bounce {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  25% { transform: translateY(-4px) scaleY(1.02); }
+  50% { transform: translateY(0) scaleY(0.98); }
+  75% { transform: translateY(-4px) scaleY(1.02); }
+}
+
+.anim-walk {
+  animation: walk-bounce 0.4s ease-in-out infinite;
+}
+
+/* --------------------------------------------------------------------------
+   Weather: Rain
+   -------------------------------------------------------------------------- */
+@keyframes rain-fall {
+  0% {
+    transform: translateY(-100vh) translateX(0);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(100vh) translateX(-30px);
+    opacity: 0.3;
+  }
+}
+
+.rain-drop {
+  position: absolute;
+  width: 2px;
+  height: 12px;
+  background: linear-gradient(to bottom, transparent, rgba(100, 181, 246, 0.7));
+  animation: rain-fall linear infinite;
+  pointer-events: none;
+}
+
+/* Generate varied rain drops via nth-child */
+.rain-drop:nth-child(odd) {
+  height: 16px;
+}
+
+.rain-drop:nth-child(3n) {
+  animation-duration: 0.7s;
+  opacity: 0.5;
+}
+
+.rain-drop:nth-child(3n+1) {
+  animation-duration: 0.9s;
+  opacity: 0.7;
+}
+
+.rain-drop:nth-child(3n+2) {
+  animation-duration: 0.8s;
+  opacity: 0.6;
+}
+
+/* Light rain */
+.weather-rain-light .rain-drop {
+  animation-duration: 1s;
+}
+
+/* Heavy rain */
+.weather-rain-heavy .rain-drop {
+  animation-duration: 0.5s;
+  height: 18px;
+}
+
+/* --------------------------------------------------------------------------
+   Weather: Snow
+   -------------------------------------------------------------------------- */
+@keyframes snow-fall {
+  0% {
+    transform: translateY(-100vh) translateX(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(0) translateX(20px) rotate(180deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(100vh) translateX(-10px) rotate(360deg);
+    opacity: 0.3;
+  }
+}
+
+.snow-flake {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background-color: #FFFFFF;
+  border-radius: 0;
+  animation: snow-fall linear infinite;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.snow-flake:nth-child(odd) {
+  width: 4px;
+  height: 4px;
+}
+
+.snow-flake:nth-child(3n) {
+  animation-duration: 5s;
+}
+
+.snow-flake:nth-child(3n+1) {
+  animation-duration: 7s;
+}
+
+.snow-flake:nth-child(3n+2) {
+  animation-duration: 6s;
+}
+
+.snow-flake:nth-child(5n) {
+  width: 8px;
+  height: 8px;
+  opacity: 0.7;
+}
+
+/* --------------------------------------------------------------------------
+   Weather: Wind (Leaves)
+   -------------------------------------------------------------------------- */
+@keyframes wind-leaf {
+  0% {
+    transform: translate(-20px, 0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  50% {
+    transform: translate(50vw, 30px) rotate(180deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(100vw, -20px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes wind-sway {
+  0%, 100% {
+    transform: rotate(-5deg);
+  }
+  50% {
+    transform: rotate(5deg);
+  }
+}
+
+.wind-leaf {
+  position: absolute;
+  width: 8px;
+  height: 6px;
+  background-color: var(--green);
+  border-radius: 0 50% 0 50%;
+  animation: wind-leaf 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.wind-leaf:nth-child(even) {
+  background-color: #8BC34A;
+  animation-duration: 5s;
+}
+
+.wind-leaf:nth-child(3n) {
+  background-color: #FDD835;
+  width: 6px;
+  height: 4px;
+  animation-duration: 3.5s;
+}
+
+/* Sway crops/trees in wind */
+.anim-wind-sway {
+  animation: wind-sway 2s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+/* --------------------------------------------------------------------------
+   Notification Slide In/Out
+   -------------------------------------------------------------------------- */
+@keyframes notification-slide-in {
+  0% {
+    transform: translateX(calc(100% + 20px));
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes notification-slide-out {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(calc(100% + 20px));
+    opacity: 0;
+  }
+}
+
+.anim-notification-in {
+  animation: notification-slide-in 0.35s ease-out forwards;
+}
+
+.anim-notification-out {
+  animation: notification-slide-out 0.3s ease-in forwards;
+}
+
+/* --------------------------------------------------------------------------
+   Modal Fade In
+   -------------------------------------------------------------------------- */
+@keyframes modal-fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.85) translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes modal-fade-out {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+.anim-modal-overlay {
+  animation: modal-fade-in 0.2s ease-out forwards;
+}
+
+.anim-modal-in {
+  animation: modal-scale-in 0.3s ease-out forwards;
+}
+
+.anim-modal-out {
+  animation: modal-fade-out 0.2s ease-in forwards;
+}
+
+/* --------------------------------------------------------------------------
+   Loading Bar Fill
+   -------------------------------------------------------------------------- */
+@keyframes loading-fill {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+@keyframes loading-stripe {
+  0% { background-position: 0 0; }
+  100% { background-position: 32px 0; }
+}
+
+@keyframes loading-pulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+.anim-loading-fill {
+  animation: loading-fill 2s ease-out forwards;
+}
+
+.anim-loading-stripe {
+  animation: loading-stripe 0.8s linear infinite;
+}
+
+.anim-loading-pulse {
+  animation: loading-pulse 1.5s ease-in-out infinite;
+}
+
+/* --------------------------------------------------------------------------
+   Gold Coin Bounce
+   -------------------------------------------------------------------------- */
+@keyframes coin-bounce {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  20% {
+    transform: translateY(-24px) scale(1.1);
+  }
+  40% {
+    transform: translateY(-8px) scale(1);
+  }
+  60% {
+    transform: translateY(-16px) scale(1.05);
+  }
+  80% {
+    transform: translateY(-4px) scale(1);
+  }
+  100% {
+    transform: translateY(-32px) scale(0.8);
+    opacity: 0;
+  }
+}
+
+@keyframes coin-spin {
+  0% { transform: scaleX(1); }
+  25% { transform: scaleX(0.1); }
+  50% { transform: scaleX(1); }
+  75% { transform: scaleX(0.1); }
+  100% { transform: scaleX(1); }
+}
+
+.anim-coin-bounce {
+  animation: coin-bounce 1s ease-out forwards;
+}
+
+.anim-coin-spin {
+  animation: coin-spin 0.6s linear infinite;
+}
+
+/* Floating +gold text */
+@keyframes gold-float-up {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-40px);
+    opacity: 0;
+  }
+}
+
+.gold-float-text {
+  position: absolute;
+  color: var(--gold);
+  font-weight: bold;
+  font-size: 0.9rem;
+  text-shadow: 1px 1px 0 var(--brown-darker);
+  pointer-events: none;
+  animation: gold-float-up 1.2s ease-out forwards;
+  z-index: 70;
+}
+
+/* --------------------------------------------------------------------------
+   Level Up Celebration
+   -------------------------------------------------------------------------- */
+@keyframes level-up-burst {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+@keyframes level-up-text {
+  0% {
+    transform: scale(0.3) translateY(20px);
+    opacity: 0;
+  }
+  40% {
+    transform: scale(1.3) translateY(-10px);
+    opacity: 1;
+  }
+  60% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) translateY(-60px);
+    opacity: 0;
+  }
+}
+
+@keyframes level-up-star {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx, 30px), var(--ty, -40px)) scale(0);
+    opacity: 0;
+  }
+}
+
+.level-up-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1500;
+  pointer-events: none;
+}
+
+.level-up-burst {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border: 4px solid var(--gold);
+  border-radius: 50%;
+  animation: level-up-burst 1s ease-out forwards;
+}
+
+.level-up-burst:nth-child(2) {
+  animation-delay: 0.15s;
+  border-color: var(--gold-dark);
+}
+
+.level-up-burst:nth-child(3) {
+  animation-delay: 0.3s;
+  border-color: var(--orange);
+}
+
+.level-up-text {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--gold);
+  text-shadow:
+    3px 3px 0 var(--brown-darker),
+    -1px -1px 0 var(--brown-darker);
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  animation: level-up-text 2s ease-out forwards;
+}
+
+.level-up-star {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: var(--gold);
+  animation: level-up-star 1s ease-out forwards;
+}
+
+/* --------------------------------------------------------------------------
+   Title Bounce (Menu)
+   -------------------------------------------------------------------------- */
+@keyframes title-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  15% {
+    transform: translateY(-12px);
+  }
+  30% {
+    transform: translateY(0);
+  }
+  45% {
+    transform: translateY(-6px);
+  }
+  60% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes title-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.anim-title-bounce {
+  animation: title-bounce 2s ease-in-out infinite;
+}
+
+.anim-title-float {
+  animation: title-float 3s ease-in-out infinite;
+}
+
+/* Per-letter stagger for title */
+.anim-title-letter {
+  display: inline-block;
+  animation: title-bounce 2s ease-in-out infinite;
+}
+
+.anim-title-letter:nth-child(1) { animation-delay: 0s; }
+.anim-title-letter:nth-child(2) { animation-delay: 0.08s; }
+.anim-title-letter:nth-child(3) { animation-delay: 0.16s; }
+.anim-title-letter:nth-child(4) { animation-delay: 0.24s; }
+.anim-title-letter:nth-child(5) { animation-delay: 0.32s; }
+.anim-title-letter:nth-child(6) { animation-delay: 0.40s; }
+.anim-title-letter:nth-child(7) { animation-delay: 0.48s; }
+
+/* --------------------------------------------------------------------------
+   Transition Utility Classes
+   -------------------------------------------------------------------------- */
+.transition-fade {
+  transition: opacity var(--transition-normal);
+}
+
+.transition-slide-up {
+  transition: transform var(--transition-normal), opacity var(--transition-normal);
+}
+
+.transition-slide-up.entering {
+  transform: translateY(20px);
+  opacity: 0;
+}
+
+.transition-slide-up.entered {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.transition-scale {
+  transition: transform var(--transition-fast);
+}
+
+.transition-scale:hover {
+  transform: scale(1.05);
+}
+
+.transition-scale:active {
+  transform: scale(0.95);
+}
+
+/* Smooth color transitions for day/night */
+.transition-daynight {
+  transition: background-color 3s ease, filter 3s ease, opacity 3s ease;
+}
+
+/* Shake (for errors or denied actions) */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 50%, 90% { transform: translateX(-4px); }
+  30%, 70% { transform: translateX(4px); }
+}
+
+.anim-shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+/* Pulse (for attention-needed items) */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.85;
+  }
+}
+
+.anim-pulse {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Fade in simple */
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes fade-out {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.anim-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
+}
+
+.anim-fade-out {
+  animation: fade-out 0.3s ease-in forwards;
+}
+
+/* Slide in from bottom */
+@keyframes slide-up-in {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-down-out {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+.anim-slide-up {
+  animation: slide-up-in 0.35s ease-out forwards;
+}
+
+.anim-slide-down {
+  animation: slide-down-out 0.3s ease-in forwards;
+}
+
+/* Rotate in */
+@keyframes rotate-in {
+  0% {
+    transform: rotate(-90deg) scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: rotate(0deg) scale(1);
+    opacity: 1;
+  }
+}
+
+.anim-rotate-in {
+  animation: rotate-in 0.4s ease-out forwards;
+}
+
+/* Harvest item fly to inventory */
+@keyframes fly-to-inventory {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--fly-x, 0px), var(--fly-y, -200px)) scale(0.3);
+    opacity: 0;
+  }
+}
+
+.anim-fly-to-inventory {
+  animation: fly-to-inventory 0.8s ease-in forwards;
+  pointer-events: none;
+}
+
+/* Plant wiggle when ready */
+@keyframes wiggle-ready {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-3deg); }
+  75% { transform: rotate(3deg); }
+}
+
+.anim-ready-wiggle {
+  animation: wiggle-ready 1.5s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+/* XP bar flash on gain */
+@keyframes xp-flash {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(1.5); }
+  100% { filter: brightness(1); }
+}
+
+.anim-xp-flash {
+  animation: xp-flash 0.4s ease-out;
+}
