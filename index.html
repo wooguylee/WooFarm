@@ -104,42 +104,47 @@
             </div>
         </div>
 
-        <!-- 도구 바 -->
-        <div id="toolbar">
-            <div class="tool-slot selected" data-tool="hoe" title="괭이 (1)">
-                <div class="tool-icon">⛏️</div>
-                <span class="tool-key">1</span>
-            </div>
-            <div class="tool-slot" data-tool="water" title="물뿌리개 (2)">
-                <div class="tool-icon">🚿</div>
-                <span class="tool-key">2</span>
-            </div>
-            <div class="tool-slot" data-tool="seed" title="씨앗 (3)">
-                <div class="tool-icon">🌱</div>
-                <span class="tool-key">3</span>
-            </div>
-            <div class="tool-slot" data-tool="harvest" title="수확 (4)">
-                <div class="tool-icon">🧺</div>
-                <span class="tool-key">4</span>
-            </div>
-            <div class="tool-slot" data-tool="feed" title="먹이 (5)">
-                <div class="tool-icon">🥕</div>
-                <span class="tool-key">5</span>
-            </div>
-            <div class="tool-slot" data-tool="decorate" title="장식 (6)">
-                <div class="tool-icon">🎨</div>
-                <span class="tool-key">6</span>
-            </div>
-        </div>
-
-        <!-- 씨앗 선택 패널 -->
-        <div id="seed-panel" class="side-panel hidden">
-            <h3 class="panel-title">씨앗 선택</h3>
-            <div id="seed-list" class="panel-list"></div>
-        </div>
-
         <!-- 알림 영역 -->
         <div id="notification-area"></div>
+    </div>
+
+    <!-- 도구 바 (게임 스크린 밖) -->
+    <div id="toolbar">
+        <div class="tool-slot selected" data-tool="hoe" title="괭이 (1)">
+            <div class="tool-icon">⛏️</div>
+            <span class="tool-key">1</span>
+        </div>
+        <div class="tool-slot" data-tool="water" title="물뿌리개 (2)">
+            <div class="tool-icon">🚿</div>
+            <span class="tool-key">2</span>
+        </div>
+        <div class="tool-slot" data-tool="seed" title="씨앗 (3)">
+            <div class="tool-icon">🌱</div>
+            <span class="tool-key">3</span>
+        </div>
+        <div class="tool-slot" data-tool="harvest" title="수확 (4)">
+            <div class="tool-icon">🧺</div>
+            <span class="tool-key">4</span>
+        </div>
+        <div class="tool-slot" data-tool="feed" title="먹이 (5)">
+            <div class="tool-icon">🥕</div>
+            <span class="tool-key">5</span>
+        </div>
+        <div class="tool-slot" data-tool="decorate" title="장식 (6)">
+            <div class="tool-icon">🎨</div>
+            <span class="tool-key">6</span>
+        </div>
+    </div>
+
+    <!-- 씨앗 선택 패널 (게임 스크린 밖) -->
+    <div id="seed-panel" class="side-panel hidden">
+        <div class="side-panel-header">
+            <span>🌱 씨앗 선택</span>
+            <div class="side-panel-close">&times;</div>
+        </div>
+        <div class="side-panel-body">
+            <div id="seed-list" class="panel-list"></div>
+        </div>
     </div>
 
     <!-- 모달 오버레이 -->

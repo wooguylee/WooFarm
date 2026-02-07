@@ -98,6 +98,8 @@
 
             Utils.hideElement(document.getElementById('loading-screen'));
             Utils.hideElement(document.getElementById('game-screen'));
+            Utils.hideElement(document.getElementById('toolbar'));
+            Utils.hideElement(document.getElementById('seed-panel'));
             Utils.showElement(document.getElementById('main-menu'));
 
             // 이어하기 버튼 상태
@@ -188,6 +190,10 @@
             // 환영 알림
             NotificationUI.show('🌾 WooFarm에 오신 것을 환영합니다! 농장을 가꿔보세요!', 'success', 5000);
 
+            // 도구바와 씨앗 패널 표시
+            const toolbar = document.getElementById('toolbar');
+            if (toolbar) Utils.showElement(toolbar);
+
             // HUD 업데이트
             HudUI.update();
         },
@@ -262,15 +268,19 @@
             this.isRunning = true;
 
             // 시각 효과
-            WeatherSystem.applyWeatherVisuals();
-            FarmSystem.renderGrid();
-            AnimalSystem.renderAnimalArea();
-            DecorationSystem.renderDecorations();
+             WeatherSystem.applyWeatherVisuals();
+             FarmSystem.renderGrid();
+             AnimalSystem.renderAnimalArea();
+             DecorationSystem.renderDecorations();
 
-            // HUD 업데이트
-            HudUI.update();
+             // 도구바 표시
+             const toolbar = document.getElementById('toolbar');
+             if (toolbar) Utils.showElement(toolbar);
 
-            NotificationUI.show('💾 게임을 불러왔습니다!', 'success');
+             // HUD 업데이트
+             HudUI.update();
+
+             NotificationUI.show('💾 게임을 불러왔습니다!', 'success');
         },
 
         /** 모든 시스템 초기화 */

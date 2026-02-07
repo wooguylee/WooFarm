@@ -66,27 +66,29 @@
             });
         },
 
-        /** 도구 선택 */
-        selectTool(toolName) {
-            selectedTool = toolName;
-            window.currentTool = toolName;
-            document.querySelectorAll('.tool-slot').forEach(slot => {
-                slot.classList.toggle('selected', slot.dataset.tool === toolName);
-            });
+         /** 도구 선택 */
+         selectTool(toolName) {
+             selectedTool = toolName;
+             window.currentTool = toolName;
+             document.querySelectorAll('.tool-slot').forEach(slot => {
+                 slot.classList.toggle('selected', slot.dataset.tool === toolName);
+             });
 
-            // 씨앗 선택 시 씨앗 패널 표시
-            const seedPanel = document.getElementById('seed-panel');
-            if (toolName === 'seed') {
-                if (seedPanel) Utils.showElement(seedPanel);
-                try {
-                    InventorySystem.renderSeedPanel(TimeSystem.currentSeason);
-                } catch(e) {}
-            } else {
-                if (seedPanel) Utils.hideElement(seedPanel);
-            }
+             // 씨앗 선택 시 씨앗 패널 표시
+             const seedPanel = document.getElementById('seed-panel');
+             if (toolName === 'seed') {
+                 if (seedPanel) {
+                     seedPanel.classList.remove('hidden');
+                     InventorySystem.renderSeedPanel(TimeSystem.currentSeason);
+                 }
+             } else {
+                 if (seedPanel) {
+                     seedPanel.classList.add('hidden');
+                 }
+             }
 
-            try { AudioManager.playSound('click'); } catch(e) {}
-        },
+             try { AudioManager.playSound('click'); } catch(e) {}
+         },
 
         /** 현재 선택된 도구 */
         getSelectedTool() {
@@ -267,6 +269,14 @@
                     const vol = parseInt(e.target.value);
                     document.getElementById('bgm-display').textContent = `${vol}%`;
                     AudioManager.setBGMVolume(vol / 100);
+                });
+            }
+
+            // 씨앗 패널 닫기 버튼
+            const seedPanelClose = document.querySelector('#seed-panel .side-panel-close');
+            if (seedPanelClose) {
+                seedPanelClose.addEventListener('click', () => {
+                    this.selectTool('hoe'); // 다른 도구로 변경
                 });
             }
 
