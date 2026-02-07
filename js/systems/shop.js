@@ -40,6 +40,18 @@ window.ShopSystem = (function () {
     _updateGoldDisplay();
 
     console.log('[ShopSystem] 초기화 완료. 보유 골드:', _gold);
+    // 상점 탭 및 카테고리 버튼 클릭 이벤트 설정
+    document.addEventListener('click', function(event) {
+      var tabBtn = event.target.closest('.shop-tab');
+      if (tabBtn && tabBtn.getAttribute('data-shop-tab')) {
+        renderShopModal(tabBtn.getAttribute('data-shop-tab'));
+      }
+      var catBtn = event.target.closest('.shop-cat');
+      if (catBtn && catBtn.getAttribute('data-cat')) {
+        _currentCategory = catBtn.getAttribute('data-cat');
+        _renderBuyTab();
+      }
+    });
   }
 
   // ===== 골드 관리 =====
@@ -199,7 +211,7 @@ window.ShopSystem = (function () {
         quantity: 1,
         totalCost: unitPrice
       });
-      if (window.AudioManager) window.AudioManager.play('purchase');
+      if (window.AudioManager) window.AudioManager.playSound('purchase');
       return true;
     }
 
@@ -223,7 +235,7 @@ window.ShopSystem = (function () {
       quantity: quantity,
       totalCost: totalCost
     });
-    if (window.AudioManager) window.AudioManager.play('purchase');
+    if (window.AudioManager) window.AudioManager.playSound('purchase');
 
     return true;
   }
@@ -263,7 +275,7 @@ window.ShopSystem = (function () {
       unitPrice: unitPrice,
       totalGold: totalGold
     });
-    if (window.AudioManager) window.AudioManager.play('sell');
+    if (window.AudioManager) window.AudioManager.playSound('sell');
 
     return true;
   }
@@ -296,7 +308,7 @@ window.ShopSystem = (function () {
    */
   function refreshShop() {
     if (window.TimeSystem && window.TimeSystem.getSeason) {
-      _currentSeason = window.TimeSystem.getSeason();
+      _currentSeason = window.TimeSystem.currentSeason;
     }
     console.log('[ShopSystem] 상점 갱신 완료. 현재 계절:', _currentSeason);
   }
@@ -533,7 +545,7 @@ window.ShopSystem = (function () {
           var itemKeys = Object.keys(window.ITEM_DATA);
           for (var t = 0; t < itemKeys.length; t++) {
             var itemData = window.ITEM_DATA[itemKeys[t]];
-            if (itemData.category === 'tool' && itemData.buyPrice) {
+            if (itemData.type === 'tool' && itemData.buyPrice) {
               items.push({
                 id: itemData.id,
                 name: itemData.name,
@@ -573,11 +585,11 @@ window.ShopSystem = (function () {
   function _getSellableItems() {
     var sellable = [];
 
-    if (!window.InventorySystem || !window.InventorySystem.getAllItems) {
+    if (!window.InventorySystem || !window.InventorySystem.getItems) {
       return sellable;
     }
 
-    var allItems = window.InventorySystem.getAllItems();
+    var allItems = window.InventorySystem.getItems();
 
     for (var i = 0; i < allItems.length; i++) {
       var item = allItems[i];

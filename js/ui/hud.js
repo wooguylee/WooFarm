@@ -69,6 +69,7 @@
         /** 도구 선택 */
         selectTool(toolName) {
             selectedTool = toolName;
+            window.currentTool = toolName;
             document.querySelectorAll('.tool-slot').forEach(slot => {
                 slot.classList.toggle('selected', slot.dataset.tool === toolName);
             });
@@ -235,7 +236,7 @@
         /** 이벤트 리스너 */
         setupEventListeners() {
             Utils.eventBus.on('time_tick', () => this.update());
-            Utils.eventBus.on('gold_changed', (data) => this.updateGoldDisplay(data.amount));
+            Utils.eventBus.on('gold_changed', (data) => this.updateGoldDisplay(data.gold));
             Utils.eventBus.on('level_up', () => this.update());
             Utils.eventBus.on('day_start', (data) => {
                 if (data && data.day) this.showDayTransition(data.day);

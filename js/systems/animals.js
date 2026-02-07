@@ -140,7 +140,7 @@ window.AnimalSystem = (function () {
       cost: feedCost
     });
 
-    if (window.AudioManager) window.AudioManager.play('animal_happy');
+    if (window.AudioManager) window.AudioManager.playSound('animal_happy');
 
     return true;
   }
@@ -221,7 +221,7 @@ window.AnimalSystem = (function () {
       product: product
     });
 
-    if (window.AudioManager) window.AudioManager.play('collect');
+    if (window.AudioManager) window.AudioManager.playSound('collect');
 
     return product;
   }

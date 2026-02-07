@@ -168,7 +168,7 @@ window.DecorationSystem = (function () {
     // 현재 게임 일수 가져오기
     var currentDay = 1;
     if (window.TimeSystem && window.TimeSystem.getDay) {
-      currentDay = window.TimeSystem.getDay();
+      currentDay = window.TimeSystem.currentDay;
     }
 
     // 장식 인스턴스 생성 및 배치
@@ -551,8 +551,8 @@ window.DecorationSystem = (function () {
 
     // 자동 물주기 효과가 있으면 농장 시스템에 전달
     if (effects.auto_water && effects.auto_water > 0 && window.FarmSystem) {
-      if (typeof window.FarmSystem.autoWater === 'function') {
-        window.FarmSystem.autoWater(Math.floor(effects.auto_water));
+      if (typeof window.FarmSystem.waterAllFromRain === 'function') {
+        window.FarmSystem.waterAllFromRain();
       }
     }
 

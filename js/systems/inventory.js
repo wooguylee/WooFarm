@@ -509,7 +509,7 @@
         return;
       }
 
-      var infoPanel = document.getElementById('item-info-panel');
+      var infoPanel = document.getElementById('item-info');
       if (!infoPanel) return;
 
       var emoji = data.emoji || '\uD83D\uDCE6';

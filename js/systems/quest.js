@@ -241,7 +241,7 @@ window.QuestSystem = (function () {
     }
 
     // 사운드 재생
-    if (window.AudioManager) window.AudioManager.play('quest_complete');
+    if (window.AudioManager) window.AudioManager.playSound('quest_complete');
 
     // 이벤트 발행
     eventBus.emit('quest_completed', {

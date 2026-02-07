@@ -423,30 +423,14 @@
             const exp = crop.exp || 10;
             this.addExp(exp);
 
-            // 퀘스트 진행
-            QuestSystem.checkProgress('crop_harvested', data);
         },
 
         /** 퀘스트 보상 처리 */
         handleQuestReward(data) {
             if (!data || !data.questId) return;
 
-            const quest = QUEST_DATA.find(q => q.id === data.questId);
+            const quest = QUEST_DATA[data.questId];
             if (!quest || !quest.rewards) return;
-
-            if (quest.rewards.gold) {
-                ShopSystem.addGold(quest.rewards.gold);
-            }
-
-            if (quest.rewards.exp) {
-                this.addExp(quest.rewards.exp);
-            }
-
-            if (quest.rewards.items) {
-                quest.rewards.items.forEach(item => {
-                    InventorySystem.addItem(item.id || item.itemId, item.quantity || 1);
-                });
-            }
 
             NotificationUI.showReward(quest.rewards);
         },

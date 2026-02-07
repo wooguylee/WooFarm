@@ -143,16 +143,20 @@
             });
 
             bus.on('item_purchased', (data) => {
-                this.show(`🛒 ${data.name || '아이템'} 구매 완료!`, 'info');
+                const itemData = window.ITEM_DATA[data.itemId] || window.CROP_DATA[data.itemId] || window.ANIMAL_DATA[data.itemId];
+                const name = itemData ? itemData.name : '아이템';
+                this.show(`🛒 ${name} 구매 완료!`, 'info');
             });
 
             bus.on('item_sold', (data) => {
-                this.show(`💰 ${data.name || '아이템'} 판매! +${Utils.formatNumber(data.totalGold || 0)}G`, 'success');
+                const itemData = window.ITEM_DATA[data.itemId] || window.CROP_DATA[data.itemId] || window.ANIMAL_DATA[data.itemId];
+                const name = itemData ? itemData.name : '아이템';
+                this.show(`💰 ${name} 판매! +${Utils.formatNumber(data.totalGold || 0)}G`, 'success');
             });
 
             bus.on('quest_completed', (data) => {
-                const quest = QUEST_DATA.find(q => q.id === data.questId);
-                if (quest) this.show(`📜 퀘스트 완료: ${quest.title}`, 'reward', 5000);
+                const quest = QUEST_DATA[data.questId];
+                if (quest) this.show(`📜 퀘스트 완료: ${quest.name}`, 'reward', 5000);
             });
 
             bus.on('animal_fed', (data) => {
@@ -160,9 +164,9 @@
             });
 
             bus.on('product_collected', (data) => {
-                this.show(`📦 ${data.productName || '생산품'} 수집!`, 'success');
+                const productName = data.product ? data.product.name : data.productName || '생산품';
+                this.show(`📦 ${productName} 수집!`, 'success');
             });
-
             bus.on('season_changed', (data) => {
                 const seasonEmojis = { spring: '🌸', summer: '☀️', fall: '🍂', winter: '❄️' };
                 const seasonNames = { spring: '봄', summer: '여름', fall: '가을', winter: '겨울' };

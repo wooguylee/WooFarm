@@ -1,443 +1,900 @@
 /**
  * WooFarm - Quest Data Definitions
- * All quests organized into chapters, from tutorial to endgame.
+ * All quests organized by ID with transformed field names and objectives structure.
  */
-window.QUEST_DATA = [
-
-  // ═══════════════════════════════════════════════════════════════════════
-  //  Chapter 1: Tutorial — Welcome to WooFarm
-  // ═══════════════════════════════════════════════════════════════════════
-
-  {
-    id: 'q_tutorial_01',
-    title: 'First Harvest',
-    description: 'Plant and harvest 5 turnips to learn the basics of farming.',
-    type: 'harvest',
+window.QUEST_DATA = {
+  q_tutorial_01: {
+    id: "q_tutorial_01",
+    name: "First Harvest",
+    description: "Plant and harvest 5 turnips to learn the basics of farming.",
     chapter: 1,
-    requirements: [
-      { type: 'harvest', target: 'turnip', amount: 5 }
+    objectives: [
+      {
+        type: "crop_harvested",
+        target: "turnip",
+        required: 5
+      }
     ],
-    rewards: { gold: 100, exp: 20, items: [{ id: 'potato_seeds', amount: 5 }] },
-    prerequisite: null,
+    rewards: {
+      gold: 100,
+      exp: 20,
+      items: [
+        {
+          id: "potato_seed",
+          amount: 5
+        }
+      ]
+    },
+    prerequisites: [],
     repeatable: false
   },
-  {
-    id: 'q_tutorial_02',
-    title: 'Green Thumb',
-    description: 'Water your crops 10 times. Healthy crops need consistent watering.',
-    type: 'harvest',
+  q_tutorial_02: {
+    id: "q_tutorial_02",
+    name: "Green Thumb",
+    description: "Water your crops 10 times. Healthy crops need consistent watering.",
     chapter: 1,
-    requirements: [
-      { type: 'water', target: 'any', amount: 10 }
+    objectives: [
+      {
+        type: "crop_watered",
+        target: "any",
+        required: 10
+      }
     ],
-    rewards: { gold: 50, exp: 15 },
-    prerequisite: 'q_tutorial_01',
+    rewards: {
+      gold: 50,
+      exp: 15,
+      items: []
+    },
+    prerequisites: [
+      "q_tutorial_01"
+    ],
     repeatable: false
   },
-  {
-    id: 'q_tutorial_03',
-    title: 'Market Day',
-    description: 'Sell your first crops at the market. Earn at least 200 gold from sales.',
-    type: 'sell',
+  q_tutorial_03: {
+    id: "q_tutorial_03",
+    name: "Market Day",
+    description: "Sell your first crops at the market. Earn at least 200 gold from sales.",
     chapter: 1,
-    requirements: [
-      { type: 'sell_gold', target: 'any', amount: 200 }
+    objectives: [
+      {
+        type: "gold_changed",
+        target: "any",
+        required: 200
+      }
     ],
-    rewards: { gold: 100, exp: 25 },
-    prerequisite: 'q_tutorial_02',
+    rewards: {
+      gold: 100,
+      exp: 25,
+      items: []
+    },
+    prerequisites: [
+      "q_tutorial_02"
+    ],
     repeatable: false
   },
-  {
-    id: 'q_tutorial_04',
-    title: 'Tool Time',
-    description: 'Purchase a hoe and a watering can from the shop.',
-    type: 'build',
+  q_tutorial_04: {
+    id: "q_tutorial_04",
+    name: "Tool Time",
+    description: "Purchase a hoe and a watering can from the shop.",
     chapter: 1,
-    requirements: [
-      { type: 'own_item', target: 'hoe', amount: 1 },
-      { type: 'own_item', target: 'watering_can', amount: 1 }
+    objectives: [
+      {
+        type: "item_owned",
+        target: "hoe",
+        required: 1
+      },
+      {
+        type: "item_owned",
+        target: "watering_can",
+        required: 1
+      }
     ],
-    rewards: { gold: 50, exp: 15, items: [{ id: 'turnip_seeds', amount: 10 }] },
-    prerequisite: null,
+    rewards: {
+      gold: 50,
+      exp: 15,
+      items: [
+        {
+          id: "turnip_seed",
+          amount: 10
+        }
+      ]
+    },
+    prerequisites: [],
     repeatable: false
   },
-  {
-    id: 'q_tutorial_05',
-    title: 'Feathered Friend',
-    description: 'Buy your first chicken and collect an egg.',
-    type: 'animal',
+  q_tutorial_05: {
+    id: "q_tutorial_05",
+    name: "Feathered Friend",
+    description: "Buy your first chicken and collect an egg.",
     chapter: 1,
-    requirements: [
-      { type: 'own_animal', target: 'chicken', amount: 1 },
-      { type: 'collect_product', target: 'egg', amount: 1 }
+    objectives: [
+      {
+        type: "animal_added",
+        target: "chicken",
+        required: 1
+      },
+      {
+        type: "product_collected",
+        target: "egg",
+        required: 1
+      }
     ],
-    rewards: { gold: 200, exp: 30, items: [{ id: 'chicken_feed', amount: 10 }] },
-    prerequisite: 'q_tutorial_03',
+    rewards: {
+      gold: 200,
+      exp: 30,
+      items: [
+        {
+          id: "chicken_feed",
+          amount: 10
+        }
+      ]
+    },
+    prerequisites: [
+      "q_tutorial_03"
+    ],
     repeatable: false
   },
-
-  // ═══════════════════════════════════════════════════════════════════════
-  //  Chapter 2: Growing Farmer — Expanding the Fields
-  // ═══════════════════════════════════════════════════════════════════════
-
-  {
-    id: 'q_growing_01',
-    title: 'Diversify Your Crops',
-    description: 'Harvest 5 different crop types. Variety is the spice of farm life.',
-    type: 'harvest',
+  q_growing_01: {
+    id: "q_growing_01",
+    name: "Diversify Your Crops",
+    description: "Harvest 5 different crop types. Variety is the spice of farm life.",
     chapter: 2,
-    requirements: [
-      { type: 'harvest_unique', target: 'any', amount: 5 }
+    objectives: [
+      {
+        type: "crops_harvested_unique",
+        target: "any",
+        required: 5
+      }
     ],
-    rewards: { gold: 300, exp: 50 },
-    prerequisite: 'q_tutorial_05',
+    rewards: {
+      gold: 300,
+      exp: 50,
+      items: []
+    },
+    prerequisites: [
+      "q_tutorial_05"
+    ],
     repeatable: false
   },
-  {
-    id: 'q_growing_02',
-    title: 'Summer Bounty',
-    description: 'Harvest 10 tomatoes and 10 corn during summer.',
-    type: 'harvest',
+  q_growing_02: {
+    id: "q_growing_02",
+    name: "Summer Bounty",
+    description: "Harvest 10 tomatoes and 10 corn during summer.",
     chapter: 2,
-    requirements: [
-      { type: 'harvest', target: 'tomato', amount: 10 },
-      { type: 'harvest', target: 'corn', amount: 10 }
+    objectives: [
+      {
+        type: "crop_harvested",
+        target: "tomato",
+        required: 10
+      },
+      {
+        type: "crop_harvested",
+        target: "corn",
+        required: 10
+      }
     ],
-    rewards: { gold: 500, exp: 60, items: [{ id: 'melon_seeds', amount: 3 }] },
-    prerequisite: 'q_growing_01',
+    rewards: {
+      gold: 500,
+      exp: 60,
+      items: [
+        {
+          id: "melon_seed",
+          amount: 3
+        }
+      ]
+    },
+    prerequisites: [
+      "q_growing_01"
+    ],
     repeatable: false
   },
-  {
-    id: 'q_growing_03',
-    title: 'Flower Power',
-    description: 'Grow and harvest 10 flowers of any kind.',
-    type: 'harvest',
+  q_growing_03: {
+    id: "q_growing_03",
+    name: "Flower Power",
+    description: "Grow and harvest 10 flowers of any kind.",
     chapter: 2,
-    requirements: [
-      { type: 'harvest_category', target: 'flower', amount: 10 }
+    objectives: [
+      {
+        type: "crops_harvested_by_category",
+        target: "flower",
+        required: 10
+      }
     ],
-    rewards: { gold: 250, exp: 40, items: [{ id: 'fertilizer', amount: 5 }] },
-    prerequisite: 'q_growing_01',
+    rewards: {
+      gold: 250,
+      exp: 40,
+      items: [
+        {
+          id: "fertilizer",
+          amount: 5
+        }
+      ]
+    },
+    prerequisites: [
+      "q_growing_01"
+    ],
     repeatable: false
   },
-  {
-    id: 'q_growing_04',
-    title: 'Big Spender',
-    description: 'Accumulate a total of 5,000 gold in lifetime earnings.',
-    type: 'sell',
+  q_growing_04: {
+    id: "q_growing_04",
+    name: "Big Spender",
+    description: "Accumulate a total of 5,000 gold in lifetime earnings.",
     chapter: 2,
-    requirements: [
-      { type: 'total_gold_earned', target: 'any', amount: 5000 }
+    objectives: [
+      {
+        type: "total_gold_earned",
+        target: "any",
+        required: 5000
+      }
     ],
-    rewards: { gold: 500, exp: 50 },
-    prerequisite: 'q_growing_01',
+    rewards: {
+      gold: 500,
+      exp: 50,
+      items: []
+    },
+    prerequisites: [
+      "q_growing_01"
+    ],
     repeatable: false
   },
-  {
-    id: 'q_growing_05',
-    title: 'Copper Upgrade',
-    description: 'Upgrade any tool to copper tier.',
-    type: 'build',
+  q_growing_05: {
+    id: "q_growing_05",
+    name: "Copper Upgrade",
+    description: "Upgrade any tool to copper tier.",
     chapter: 2,
-    requirements: [
-      { type: 'upgrade_tool', target: 'any', amount: 1 }
+    objectives: [
+      {
+        type: "tool_upgraded",
+        target: "any",
+        required: 1
+      }
     ],
-    rewards: { gold: 300, exp: 40, items: [{ id: 'iron_ore', amount: 3 }] },
-    prerequisite: 'q_growing_04',
+    rewards: {
+      gold: 300,
+      exp: 40,
+      items: [
+        {
+          id: "iron_ore",
+          amount: 3
+        }
+      ]
+    },
+    prerequisites: [
+      "q_growing_04"
+    ],
     repeatable: false
   },
-
-  // ═══════════════════════════════════════════════════════════════════════
-  //  Chapter 3: Animal Lover — Building the Barnyard
-  // ═══════════════════════════════════════════════════════════════════════
-
-  {
-    id: 'q_animal_01',
-    title: 'Moo-ving Up',
-    description: 'Purchase a cow and collect 5 bottles of milk.',
-    type: 'animal',
+  q_animal_01: {
+    id: "q_animal_01",
+    name: "Moo-ving Up",
+    description: "Purchase a cow and collect 5 bottles of milk.",
     chapter: 3,
-    requirements: [
-      { type: 'own_animal', target: 'cow', amount: 1 },
-      { type: 'collect_product', target: 'milk', amount: 5 }
+    objectives: [
+      {
+        type: "animal_added",
+        target: "cow",
+        required: 1
+      },
+      {
+        type: "product_collected",
+        target: "milk",
+        required: 5
+      }
     ],
-    rewards: { gold: 500, exp: 60 },
-    prerequisite: 'q_growing_05',
+    rewards: {
+      gold: 500,
+      exp: 60,
+      items: []
+    },
+    prerequisites: [
+      "q_growing_05"
+    ],
     repeatable: false
   },
-  {
-    id: 'q_animal_02',
-    title: 'Woolly World',
-    description: 'Own a sheep and collect 3 bundles of wool.',
-    type: 'animal',
+  q_animal_02: {
+    id: "q_animal_02",
+    name: "Woolly World",
+    description: "Own a sheep and collect 3 bundles of wool.",
     chapter: 3,
-    requirements: [
-      { type: 'own_animal', target: 'sheep', amount: 1 },
-      { type: 'collect_product', target: 'wool', amount: 3 }
+    objectives: [
+      {
+        type: "animal_added",
+        target: "sheep",
+        required: 1
+      },
+      {
+        type: "product_collected",
+        target: "wool",
+        required: 3
+      }
     ],
-    rewards: { gold: 400, exp: 50 },
-    prerequisite: 'q_animal_01',
+    rewards: {
+      gold: 400,
+      exp: 50,
+      items: []
+    },
+    prerequisites: [
+      "q_animal_01"
+    ],
     repeatable: false
   },
-  {
-    id: 'q_animal_03',
-    title: 'Truffle Hunter',
-    description: 'Purchase a pig and find your first truffle.',
-    type: 'animal',
+  q_animal_03: {
+    id: "q_animal_03",
+    name: "Truffle Hunter",
+    description: "Purchase a pig and find your first truffle.",
     chapter: 3,
-    requirements: [
-      { type: 'own_animal', target: 'pig', amount: 1 },
-      { type: 'collect_product', target: 'truffle', amount: 1 }
+    objectives: [
+      {
+        type: "animal_added",
+        target: "pig",
+        required: 1
+      },
+      {
+        type: "product_collected",
+        target: "truffle",
+        required: 1
+      }
     ],
-    rewards: { gold: 800, exp: 80, items: [{ id: 'premium_feed', amount: 5 }] },
-    prerequisite: 'q_animal_02',
+    rewards: {
+      gold: 800,
+      exp: 80,
+      items: [
+        {
+          id: "premium_feed",
+          amount: 5
+        }
+      ]
+    },
+    prerequisites: [
+      "q_animal_02"
+    ],
     repeatable: false
   },
-  {
-    id: 'q_animal_04',
-    title: 'Happy Animals',
-    description: 'Keep all your animals at maximum happiness for 7 consecutive days.',
-    type: 'animal',
+  q_animal_04: {
+    id: "q_animal_04",
+    name: "Happy Animals",
+    description: "Keep all your animals at maximum happiness for 7 consecutive days.",
     chapter: 3,
-    requirements: [
-      { type: 'happiness_streak', target: 'all', amount: 7 }
+    objectives: [
+      {
+        type: "happiness_streak",
+        target: "all",
+        required: 7
+      }
     ],
-    rewards: { gold: 600, exp: 70, items: [{ id: 'golden_egg', amount: 1 }] },
-    prerequisite: 'q_animal_03',
+    rewards: {
+      gold: 600,
+      exp: 70,
+      items: [
+        {
+          id: "golden_egg",
+          amount: 1
+        }
+      ]
+    },
+    prerequisites: [
+      "q_animal_03"
+    ],
     repeatable: false
   },
-  {
-    id: 'q_animal_05',
-    title: 'Egg Collector',
-    description: 'Collect a total of 50 eggs (chicken or duck).',
-    type: 'animal',
+  q_animal_05: {
+    id: "q_animal_05",
+    name: "Egg Collector",
+    description: "Collect a total of 50 eggs (chicken or duck).",
     chapter: 3,
-    requirements: [
-      { type: 'collect_product', target: 'egg', amount: 30 },
-      { type: 'collect_product', target: 'duck_egg', amount: 20 }
+    objectives: [
+      {
+        type: "product_collected",
+        target: "egg",
+        required: 30
+      },
+      {
+        type: "product_collected",
+        target: "duck_egg",
+        required: 20
+      }
     ],
-    rewards: { gold: 500, exp: 60 },
-    prerequisite: 'q_animal_01',
+    rewards: {
+      gold: 500,
+      exp: 60,
+      items: []
+    },
+    prerequisites: [
+      "q_animal_01"
+    ],
     repeatable: false
   },
-
-  // ═══════════════════════════════════════════════════════════════════════
-  //  Chapter 4: Master Farmer — Mastering the Land
-  // ═══════════════════════════════════════════════════════════════════════
-
-  {
-    id: 'q_master_01',
-    title: 'Pumpkin Patch',
-    description: 'Harvest 20 pumpkins in a single fall season.',
-    type: 'harvest',
+  q_master_01: {
+    id: "q_master_01",
+    name: "Pumpkin Patch",
+    description: "Harvest 20 pumpkins in a single fall season.",
     chapter: 4,
-    requirements: [
-      { type: 'harvest_in_season', target: 'pumpkin', amount: 20 }
+    objectives: [
+      {
+        type: "crop_harvested_in_season",
+        target: "pumpkin",
+        required: 20
+      }
     ],
-    rewards: { gold: 1000, exp: 100, items: [{ id: 'ancient_seed', amount: 1 }] },
-    prerequisite: 'q_animal_04',
+    rewards: {
+      gold: 1000,
+      exp: 100,
+      items: [
+        {
+          id: "ancient_seed",
+          amount: 1
+        }
+      ]
+    },
+    prerequisites: [
+      "q_animal_04"
+    ],
     repeatable: false
   },
-  {
-    id: 'q_master_02',
-    title: 'Iron Will',
-    description: 'Upgrade all 5 tools to at least iron tier.',
-    type: 'build',
+  q_master_02: {
+    id: "q_master_02",
+    name: "Iron Will",
+    description: "Upgrade all 5 tools to at least iron tier.",
     chapter: 4,
-    requirements: [
-      { type: 'upgrade_tool', target: 'hoe', amount: 2 },
-      { type: 'upgrade_tool', target: 'watering_can', amount: 2 },
-      { type: 'upgrade_tool', target: 'basket', amount: 2 },
-      { type: 'upgrade_tool', target: 'axe', amount: 2 },
-      { type: 'upgrade_tool', target: 'pickaxe', amount: 2 }
+    objectives: [
+      {
+        type: "tool_upgraded",
+        target: "hoe",
+        required: 2
+      },
+      {
+        type: "tool_upgraded",
+        target: "watering_can",
+        required: 2
+      },
+      {
+        type: "tool_upgraded",
+        target: "basket",
+        required: 2
+      },
+      {
+        type: "tool_upgraded",
+        target: "axe",
+        required: 2
+      },
+      {
+        type: "tool_upgraded",
+        target: "pickaxe",
+        required: 2
+      }
     ],
-    rewards: { gold: 2000, exp: 150, items: [{ id: 'gold_ore', amount: 5 }] },
-    prerequisite: 'q_master_01',
+    rewards: {
+      gold: 2000,
+      exp: 150,
+      items: [
+        {
+          id: "gold_ore",
+          amount: 5
+        }
+      ]
+    },
+    prerequisites: [
+      "q_master_01"
+    ],
     repeatable: false
   },
-  {
-    id: 'q_master_03',
-    title: 'Seasonal Champion',
-    description: 'Harvest at least one crop from every season.',
-    type: 'harvest',
+  q_master_03: {
+    id: "q_master_03",
+    name: "Seasonal Champion",
+    description: "Harvest at least one crop from every season.",
     chapter: 4,
-    requirements: [
-      { type: 'harvest_season', target: 'spring', amount: 1 },
-      { type: 'harvest_season', target: 'summer', amount: 1 },
-      { type: 'harvest_season', target: 'fall', amount: 1 },
-      { type: 'harvest_season', target: 'winter', amount: 1 }
+    objectives: [
+      {
+        type: "crop_harvested_in_season",
+        target: "spring",
+        required: 1
+      },
+      {
+        type: "crop_harvested_in_season",
+        target: "summer",
+        required: 1
+      },
+      {
+        type: "crop_harvested_in_season",
+        target: "fall",
+        required: 1
+      },
+      {
+        type: "crop_harvested_in_season",
+        target: "winter",
+        required: 1
+      }
     ],
-    rewards: { gold: 800, exp: 80 },
-    prerequisite: 'q_animal_04',
+    rewards: {
+      gold: 800,
+      exp: 80,
+      items: []
+    },
+    prerequisites: [
+      "q_animal_04"
+    ],
     repeatable: false
   },
-  {
-    id: 'q_master_04',
-    title: 'Decorator',
-    description: 'Place 15 decorations on your farm.',
-    type: 'build',
+  q_master_04: {
+    id: "q_master_04",
+    name: "Decorator",
+    description: "Place 15 decorations on your farm.",
     chapter: 4,
-    requirements: [
-      { type: 'place_decoration', target: 'any', amount: 15 }
+    objectives: [
+      {
+        type: "decoration_placed",
+        target: "any",
+        required: 15
+      }
     ],
-    rewards: { gold: 600, exp: 70 },
-    prerequisite: 'q_master_01',
+    rewards: {
+      gold: 600,
+      exp: 70,
+      items: []
+    },
+    prerequisites: [
+      "q_master_01"
+    ],
     repeatable: false
   },
-  {
-    id: 'q_master_05',
-    title: 'Wealthy Farmer',
-    description: 'Accumulate 25,000 gold in lifetime earnings.',
-    type: 'sell',
+  q_master_05: {
+    id: "q_master_05",
+    name: "Wealthy Farmer",
+    description: "Accumulate 25,000 gold in lifetime earnings.",
     chapter: 4,
-    requirements: [
-      { type: 'total_gold_earned', target: 'any', amount: 25000 }
+    objectives: [
+      {
+        type: "total_gold_earned",
+        target: "any",
+        required: 25000
+      }
     ],
-    rewards: { gold: 2000, exp: 120 },
-    prerequisite: 'q_master_01',
+    rewards: {
+      gold: 2000,
+      exp: 120,
+      items: []
+    },
+    prerequisites: [
+      "q_master_01"
+    ],
     repeatable: false
   },
-
-  // ═══════════════════════════════════════════════════════════════════════
-  //  Chapter 5: Farm Legend — The Ultimate Challenges
-  // ═══════════════════════════════════════════════════════════════════════
-
-  {
-    id: 'q_legend_01',
-    title: 'Full Barnyard',
-    description: 'Own at least one of every animal type.',
-    type: 'animal',
+  q_legend_01: {
+    id: "q_legend_01",
+    name: "Full Barnyard",
+    description: "Own at least one of every animal type.",
     chapter: 5,
-    requirements: [
-      { type: 'own_animal', target: 'chicken', amount: 1 },
-      { type: 'own_animal', target: 'cow', amount: 1 },
-      { type: 'own_animal', target: 'sheep', amount: 1 },
-      { type: 'own_animal', target: 'pig', amount: 1 },
-      { type: 'own_animal', target: 'duck', amount: 1 },
-      { type: 'own_animal', target: 'goat', amount: 1 }
+    objectives: [
+      {
+        type: "animal_added",
+        target: "chicken",
+        required: 1
+      },
+      {
+        type: "animal_added",
+        target: "cow",
+        required: 1
+      },
+      {
+        type: "animal_added",
+        target: "sheep",
+        required: 1
+      },
+      {
+        type: "animal_added",
+        target: "pig",
+        required: 1
+      },
+      {
+        type: "animal_added",
+        target: "duck",
+        required: 1
+      },
+      {
+        type: "animal_added",
+        target: "goat",
+        required: 1
+      }
     ],
-    rewards: { gold: 3000, exp: 200 },
-    prerequisite: 'q_master_05',
+    rewards: {
+      gold: 3000,
+      exp: 200,
+      items: []
+    },
+    prerequisites: [
+      "q_master_05"
+    ],
     repeatable: false
   },
-  {
-    id: 'q_legend_02',
-    title: 'Golden Touch',
-    description: 'Upgrade all tools to gold tier — the ultimate craftsman.',
-    type: 'build',
+  q_legend_02: {
+    id: "q_legend_02",
+    name: "Golden Touch",
+    description: "Upgrade all tools to gold tier — the ultimate craftsman.",
     chapter: 5,
-    requirements: [
-      { type: 'upgrade_tool', target: 'hoe', amount: 3 },
-      { type: 'upgrade_tool', target: 'watering_can', amount: 3 },
-      { type: 'upgrade_tool', target: 'basket', amount: 3 },
-      { type: 'upgrade_tool', target: 'axe', amount: 3 },
-      { type: 'upgrade_tool', target: 'pickaxe', amount: 3 }
+    objectives: [
+      {
+        type: "tool_upgraded",
+        target: "hoe",
+        required: 3
+      },
+      {
+        type: "tool_upgraded",
+        target: "watering_can",
+        required: 3
+      },
+      {
+        type: "tool_upgraded",
+        target: "basket",
+        required: 3
+      },
+      {
+        type: "tool_upgraded",
+        target: "axe",
+        required: 3
+      },
+      {
+        type: "tool_upgraded",
+        target: "pickaxe",
+        required: 3
+      }
     ],
-    rewards: { gold: 5000, exp: 300, items: [{ id: 'lucky_clover', amount: 3 }] },
-    prerequisite: 'q_legend_01',
+    rewards: {
+      gold: 5000,
+      exp: 300,
+      items: [
+        {
+          id: "lucky_clover",
+          amount: 3
+        }
+      ]
+    },
+    prerequisites: [
+      "q_legend_01"
+    ],
     repeatable: false
   },
-  {
-    id: 'q_legend_03',
-    title: 'Crop Encyclopedia',
-    description: 'Harvest every crop type at least once. A true botanist.',
-    type: 'harvest',
+  q_legend_03: {
+    id: "q_legend_03",
+    name: "Crop Encyclopedia",
+    description: "Harvest every crop type at least once. A true botanist.",
     chapter: 5,
-    requirements: [
-      { type: 'harvest', target: 'turnip', amount: 1 },
-      { type: 'harvest', target: 'potato', amount: 1 },
-      { type: 'harvest', target: 'strawberry', amount: 1 },
-      { type: 'harvest', target: 'tulip', amount: 1 },
-      { type: 'harvest', target: 'cauliflower', amount: 1 },
-      { type: 'harvest', target: 'tomato', amount: 1 },
-      { type: 'harvest', target: 'corn', amount: 1 },
-      { type: 'harvest', target: 'melon', amount: 1 },
-      { type: 'harvest', target: 'sunflower', amount: 1 },
-      { type: 'harvest', target: 'blueberry', amount: 1 },
-      { type: 'harvest', target: 'pumpkin', amount: 1 },
-      { type: 'harvest', target: 'carrot', amount: 1 },
-      { type: 'harvest', target: 'grape', amount: 1 },
-      { type: 'harvest', target: 'eggplant', amount: 1 },
-      { type: 'harvest', target: 'sweet_potato', amount: 1 },
-      { type: 'harvest', target: 'winter_radish', amount: 1 },
-      { type: 'harvest', target: 'holly', amount: 1 },
-      { type: 'harvest', target: 'wheat', amount: 1 }
+    objectives: [
+      {
+        type: "crop_harvested",
+        target: "turnip",
+        required: 1
+      },
+      {
+        type: "crop_harvested",
+        target: "potato",
+        required: 1
+      },
+      {
+        type: "crop_harvested",
+        target: "strawberry",
+        required: 1
+      },
+      {
+        type: "crop_harvested",
+        target: "tulip",
+        required: 1
+      },
+      {
+        type: "crop_harvested",
+        target: "cauliflower",
+        required: 1
+      },
+      {
+        type: "crop_harvested",
+        target: "tomato",
+        required: 1
+      },
+      {
+        type: "crop_harvested",
+        target: "corn",
+        required: 1
+      },
+      {
+        type: "crop_harvested",
+        target: "melon",
+        required: 1
+      },
+      {
+        type: "crop_harvested",
+        target: "sunflower",
+        required: 1
+      },
+      {
+        type: "crop_harvested",
+        target: "blueberry",
+        required: 1
+      },
+      {
+        type: "crop_harvested",
+        target: "pumpkin",
+        required: 1
+      },
+      {
+        type: "crop_harvested",
+        target: "carrot",
+        required: 1
+      },
+      {
+        type: "crop_harvested",
+        target: "grape",
+        required: 1
+      },
+      {
+        type: "crop_harvested",
+        target: "eggplant",
+        required: 1
+      },
+      {
+        type: "crop_harvested",
+        target: "sweet_potato",
+        required: 1
+      },
+      {
+        type: "crop_harvested",
+        target: "winter_radish",
+        required: 1
+      },
+      {
+        type: "crop_harvested",
+        target: "holly",
+        required: 1
+      },
+      {
+        type: "crop_harvested",
+        target: "wheat",
+        required: 1
+      }
     ],
-    rewards: { gold: 3000, exp: 250, items: [{ id: 'ancient_seed', amount: 3 }] },
-    prerequisite: 'q_master_03',
+    rewards: {
+      gold: 3000,
+      exp: 250,
+      items: [
+        {
+          id: "ancient_seed",
+          amount: 3
+        }
+      ]
+    },
+    prerequisites: [
+      "q_master_03"
+    ],
     repeatable: false
   },
-  {
-    id: 'q_legend_04',
-    title: 'Tycoon',
-    description: 'Earn a lifetime total of 50,000 gold. You are a farming mogul.',
-    type: 'sell',
+  q_legend_04: {
+    id: "q_legend_04",
+    name: "Tycoon",
+    description: "Earn a lifetime total of 50,000 gold. You are a farming mogul.",
     chapter: 5,
-    requirements: [
-      { type: 'total_gold_earned', target: 'any', amount: 50000 }
+    objectives: [
+      {
+        type: "total_gold_earned",
+        target: "any",
+        required: 50000
+      }
     ],
-    rewards: { gold: 5000, exp: 300 },
-    prerequisite: 'q_master_05',
+    rewards: {
+      gold: 5000,
+      exp: 300,
+      items: []
+    },
+    prerequisites: [
+      "q_master_05"
+    ],
     repeatable: false
   },
-  {
-    id: 'q_legend_05',
-    title: 'WooFarm Legend',
-    description: 'Complete all other quests to earn the title of Farm Legend.',
-    type: 'social',
+  q_legend_05: {
+    id: "q_legend_05",
+    name: "WooFarm Legend",
+    description: "Complete all other quests to earn the title of Farm Legend.",
     chapter: 5,
-    requirements: [
-      { type: 'complete_quest', target: 'q_legend_01', amount: 1 },
-      { type: 'complete_quest', target: 'q_legend_02', amount: 1 },
-      { type: 'complete_quest', target: 'q_legend_03', amount: 1 },
-      { type: 'complete_quest', target: 'q_legend_04', amount: 1 }
+    objectives: [
+      {
+        type: "quest_completed",
+        target: "q_legend_01",
+        required: 1
+      },
+      {
+        type: "quest_completed",
+        target: "q_legend_02",
+        required: 1
+      },
+      {
+        type: "quest_completed",
+        target: "q_legend_03",
+        required: 1
+      },
+      {
+        type: "quest_completed",
+        target: "q_legend_04",
+        required: 1
+      }
     ],
-    rewards: { gold: 10000, exp: 500, items: [{ id: 'lucky_clover', amount: 5 }, { id: 'golden_egg', amount: 3 }] },
-    prerequisite: null,
+    rewards: {
+      gold: 10000,
+      exp: 500,
+      items: [
+        {
+          id: "lucky_clover",
+          amount: 5
+        },
+        {
+          id: "golden_egg",
+          amount: 3
+        }
+      ]
+    },
+    prerequisites: [],
     repeatable: false
   },
-
-  // ═══════════════════════════════════════════════════════════════════════
-  //  Repeatable Quests — Daily / Weekly Tasks
-  // ═══════════════════════════════════════════════════════════════════════
-
-  {
-    id: 'q_daily_harvest',
-    title: 'Daily Harvest',
-    description: 'Harvest 10 crops of any kind today.',
-    type: 'harvest',
+  q_daily_harvest: {
+    id: "q_daily_harvest",
+    name: "Daily Harvest",
+    description: "Harvest 10 crops of any kind today.",
     chapter: 0,
-    requirements: [
-      { type: 'harvest', target: 'any', amount: 10 }
+    objectives: [
+      {
+        type: "crop_harvested",
+        target: "any",
+        required: 10
+      }
     ],
-    rewards: { gold: 100, exp: 15 },
-    prerequisite: 'q_tutorial_01',
+    rewards: {
+      gold: 100,
+      exp: 15,
+      items: []
+    },
+    prerequisites: [
+      "q_tutorial_01"
+    ],
     repeatable: true
   },
-  {
-    id: 'q_daily_sell',
-    title: 'Daily Sales',
-    description: 'Earn at least 500 gold from sales today.',
-    type: 'sell',
+  q_daily_sell: {
+    id: "q_daily_sell",
+    name: "Daily Sales",
+    description: "Earn at least 500 gold from sales today.",
     chapter: 0,
-    requirements: [
-      { type: 'sell_gold', target: 'any', amount: 500 }
+    objectives: [
+      {
+        type: "gold_changed",
+        target: "any",
+        required: 500
+      }
     ],
-    rewards: { gold: 150, exp: 20 },
-    prerequisite: 'q_tutorial_03',
+    rewards: {
+      gold: 150,
+      exp: 20,
+      items: []
+    },
+    prerequisites: [
+      "q_tutorial_03"
+    ],
     repeatable: true
   },
-  {
-    id: 'q_daily_feed',
-    title: 'Caretaker',
-    description: 'Feed all your animals today.',
-    type: 'animal',
+  q_daily_feed: {
+    id: "q_daily_feed",
+    name: "Caretaker",
+    description: "Feed all your animals today.",
     chapter: 0,
-    requirements: [
-      { type: 'feed_all', target: 'any', amount: 1 }
+    objectives: [
+      {
+        type: "animals_fed",
+        target: "any",
+        required: 1
+      }
     ],
-    rewards: { gold: 75, exp: 10 },
-    prerequisite: 'q_tutorial_05',
+    rewards: {
+      gold: 75,
+      exp: 10,
+      items: []
+    },
+    prerequisites: [
+      "q_tutorial_05"
+    ],
     repeatable: true
   }
-];
+};

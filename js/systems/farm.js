@@ -221,7 +221,7 @@
       });
 
       if (window.AudioManager && window.AudioManager.play) {
-        window.AudioManager.play('plant');
+        window.AudioManager.playSound('plant');
       }
 
       console.log('[FarmSystem] 작물 심기 완료: ' + cropId + ' (' + row + ',' + col + ')');
@@ -561,7 +561,7 @@
       eventBus.emit('tile_tilled', { row: row, col: col });
 
       if (window.AudioManager && window.AudioManager.play) {
-        window.AudioManager.play('hoe');
+        window.AudioManager.playSound('hoe');
       }
     },
 
@@ -580,7 +580,7 @@
       eventBus.emit('tile_watered', { row: row, col: col, waterLevel: tile.waterLevel });
 
       if (window.AudioManager && window.AudioManager.play) {
-        window.AudioManager.play('water');
+        window.AudioManager.playSound('water');
       }
     },
 
@@ -639,7 +639,7 @@
       });
 
       if (window.AudioManager && window.AudioManager.play) {
-        window.AudioManager.play('harvest');
+        window.AudioManager.playSound('harvest');
       }
 
       console.log('[FarmSystem] 수확 완료: ' + cropId + ' x' + harvestQuantity);
