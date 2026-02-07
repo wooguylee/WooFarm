@@ -44,6 +44,12 @@ window.LogManager = (function () {
         clearBtn.addEventListener('click', () => this.clear());
       }
 
+      // 로그 패널의 toggle 버튼
+      const toggleBtn = document.querySelector('.log-panel-toggle');
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => this.togglePanel());
+      }
+
       console.log('[LogManager] 초기화 완료');
     },
 
@@ -129,6 +135,24 @@ window.LogManager = (function () {
       logs.length = 0;
       this.renderLogs();
       originalConsoleLog('[LogManager] 로그가 삭제되었습니다');
+    },
+
+    /**
+     * 로그 패널을 토글합니다 (표시/숨김)
+     */
+    togglePanel: function () {
+      const logPanel = document.getElementById('log-panel');
+      const toggleBtn = document.querySelector('.log-panel-toggle');
+      if (logPanel) {
+        logPanel.classList.toggle('collapsed');
+        if (logPanel.classList.contains('collapsed')) {
+          if (toggleBtn) toggleBtn.title = '로그 패널 표시하기';
+          if (toggleBtn) toggleBtn.textContent = '▶';
+        } else {
+          if (toggleBtn) toggleBtn.title = '로그 패널 숨기기';
+          if (toggleBtn) toggleBtn.textContent = '◀';
+        }
+      }
     },
 
     /**

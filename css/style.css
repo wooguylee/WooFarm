@@ -852,30 +852,60 @@ select:focus-visible {
 }
 
 .seed-item-icon {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.4rem;
-  background-color: var(--brown-darker);
-  border: 2px solid var(--pixel-border);
+   width: 32px;
+   height: 32px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   font-size: 1.4rem;
+   background-color: var(--brown-darker);
+   border: 2px solid var(--pixel-border);
 }
 
-.seed-item-info {
-  flex: 1;
-  min-width: 0;
+/* seed-emoji는 seed-item-icon과 동일하게 스타일 */
+.seed-emoji {
+   width: 32px;
+   height: 32px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   font-size: 1.4rem;
+   background-color: var(--brown-darker);
+   border: 2px solid var(--pixel-border);
+   flex-shrink: 0;
 }
 
-.seed-item-name {
-  font-size: 0.75rem;
-  font-weight: bold;
-  color: var(--text-light);
+.seed-item-info,
+.seed-info {
+   flex: 1;
+   min-width: 0;
+   display: flex;
+   flex-direction: column;
+   gap: var(--sp-xs);
+}
+
+.seed-item-name,
+.seed-name {
+   font-size: 0.75rem;
+   font-weight: bold;
+   color: var(--text-light);
 }
 
 .seed-item-cost {
+    font-size: 0.65rem;
+    color: var(--gold);
+}
+
+.seed-quantity {
+   font-size: 0.7rem;
+   color: var(--text-muted);
+   font-weight: normal;
+}
+
+.seed-growth-time {
    font-size: 0.65rem;
-   color: var(--gold);
+   color: var(--text-muted);
+   font-weight: normal;
 }
 
 /* --------------------------------------------------------------------------
@@ -892,6 +922,25 @@ select:focus-visible {
    z-index: var(--z-side-panel);
    display: flex;
    flex-direction: column;
+   transition: transform 0.3s ease;
+}
+
+#log-panel.collapsed {
+   transform: translateX(-100%);
+}
+
+#log-panel.collapsed::before {
+   content: '📋';
+   position: fixed;
+   left: 8px;
+   top: var(--hud-height);
+   font-size: 1.2rem;
+   cursor: pointer;
+   z-index: var(--z-side-panel);
+   background: rgba(26, 26, 46, 0.95);
+   padding: 8px;
+   border: 2px solid var(--pixel-border);
+   border-radius: 4px;
 }
 
 #log-panel .side-panel-header {
@@ -912,6 +961,20 @@ select:focus-visible {
 
 .log-panel-clear:hover {
    color: var(--red-light);
+}
+
+.log-panel-toggle {
+   background: none;
+   border: none;
+   color: var(--text-light);
+   cursor: pointer;
+   font-size: 0.9rem;
+   padding: 4px 8px;
+   transition: color var(--transition-fast);
+}
+
+.log-panel-toggle:hover {
+   color: var(--gold);
 }
 
 #log-content {
