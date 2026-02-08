@@ -150,44 +150,47 @@
             }
         },
 
-        /** 새 게임 시작 */
-        startNewGame() {
-            // 화면 전환
-            Utils.hideElement(document.getElementById('main-menu'));
-            Utils.showElement(document.getElementById('game-screen'));
-            this.currentScreen = 'game';
+         /** 새 게임 시작 */
+         startNewGame() {
+             // 화면 전환
+             Utils.hideElement(document.getElementById('main-menu'));
+             Utils.showElement(document.getElementById('game-screen'));
+             this.currentScreen = 'game';
 
-            // 플레이어 초기화
-            this.player = {
-                name: 'Farmer',
-                level: 1,
-                exp: 0,
-                totalEarnings: 0,
-                totalHarvests: 0
-            };
+             // 플레이어 초기화
+             this.player = {
+                 name: 'Farmer',
+                 level: 1,
+                 exp: 0,
+                 totalEarnings: 0,
+                 totalHarvests: 0
+             };
 
-            this.resetDailyStats();
+             this.resetDailyStats();
 
-            // 모든 시스템 초기화
-            this.initAllSystems();
+             // 기존 시스템 정리 (메모리 누수 방지)
+             this.cleanupAllSystems();
 
-            // 시작 아이템 지급
-            this.giveStartingItems();
+             // 모든 시스템 초기화
+             this.initAllSystems();
 
-            // UI 초기화
-            this.initUI();
+             // 시작 아이템 지급
+             this.giveStartingItems();
 
-            // 이벤트 리스너 설정
-            this.setupEventListeners();
+             // UI 초기화
+             this.initUI();
 
-            // 시간 시작
-            TimeSystem.start();
-            this.isRunning = true;
+             // 이벤트 리스너 설정
+             this.setupEventListeners();
 
-            // 날씨 시각 효과 적용
-            WeatherSystem.applyWeatherVisuals();
+             // 시간 시작
+             TimeSystem.start();
+             this.isRunning = true;
 
-            // 동물 영역 렌더링
+             // 날씨 시각 효과 적용
+             WeatherSystem.applyWeatherVisuals();
+
+             // 동물 영역 렌더링
             AnimalSystem.renderAnimalArea();
 
             // 장식 렌더링
@@ -225,10 +228,13 @@
                 this.player = { ...this.player, ...saveData.player };
             }
 
-            this.resetDailyStats();
+             this.resetDailyStats();
 
-            // 시스템 초기화
-            this.initAllSystems();
+             // 기존 시스템 정리 (메모리 누수 방지)
+             this.cleanupAllSystems();
+
+             // 시스템 초기화
+             this.initAllSystems();
 
             // 저장 데이터로 시스템 복원
             if (saveData.farm) FarmSystem.loadGridState(saveData.farm);
@@ -295,18 +301,29 @@
               NotificationUI.show('💾 게임을 불러왔습니다!', 'success');
         },
 
-        /** 모든 시스템 초기화 */
-        initAllSystems() {
-            TimeSystem.init();
-            WeatherSystem.init();
-            FarmSystem.init();
-            InventorySystem.init();
-            ShopSystem.init();
-            AnimalSystem.init();
-            QuestSystem.init();
-            DecorationSystem.init();
-            RankingSystem.init();
-        },
+         /** 모든 시스템 초기화 */
+         initAllSystems() {
+             TimeSystem.init();
+             WeatherSystem.init();
+             FarmSystem.init();
+             InventorySystem.init();
+             ShopSystem.init();
+             AnimalSystem.init();
+             QuestSystem.init();
+             DecorationSystem.init();
+             RankingSystem.init();
+         },
+
+         /** 모든 시스템 정리 (메모리 누수 방지) */
+         cleanupAllSystems() {
+             FarmSystem.cleanup?.();
+             InventorySystem.cleanup?.();
+             ShopSystem.cleanup?.();
+             AnimalSystem.cleanup?.();
+             QuestSystem.cleanup?.();
+             DecorationSystem.cleanup?.();
+             console.log('[Game] 모든 시스템 정리 완료');
+         },
 
         /** UI 초기화 */
         initUI() {
