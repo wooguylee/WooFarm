@@ -5,7 +5,7 @@
 window.LogManager = (function () {
   'use strict';
 
-  const MAX_LOGS = 100; // 최대 로그 개수
+   const MAX_LOGS = 10; // 최대 로그 개수
   const logs = [];
   let originalConsoleLog;
   let originalConsoleWarn;

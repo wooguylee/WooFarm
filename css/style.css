@@ -425,9 +425,18 @@ select:focus-visible {
 .hud-left,
 .hud-center,
 .hud-right {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-sm);
+   display: flex;
+   align-items: center;
+   gap: var(--sp-sm);
+}
+
+.hud-item {
+   display: flex;
+   align-items: center;
+   gap: var(--sp-xs);
+   color: white;
+   font-weight: bold;
+   font-size: 0.85rem;
 }
 
 .hud-left {
