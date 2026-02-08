@@ -9,10 +9,31 @@
     let notifications = [];
     let notificationArea = null;
 
+    // ── 이벤트 핸들러 추적 (메모리 누수 방지) ──
+    let _eventHandlers = {};
+
     window.NotificationUI = {
         init() {
+            // 기존 리스너 정리 (중복 방지)
+            this.cleanup();
+            
             notificationArea = document.getElementById('notification-area');
             this.setupEventListeners();
+        },
+
+        /** 이벤트 리스너 정리 */
+        cleanup() {
+            const bus = Utils.eventBus;
+            
+            // 등록된 모든 이벤트 리스너 제거
+            Object.keys(_eventHandlers).forEach(eventName => {
+                if (_eventHandlers[eventName]) {
+                    bus.off(eventName, _eventHandlers[eventName]);
+                }
+            });
+            
+            _eventHandlers = {};
+            console.log('[NotificationUI] 이벤트 리스너 정리 완료');
         },
 
         /** 알림 표시 */
@@ -124,75 +145,92 @@
             [...notifications].forEach(n => this.removeNotification(n));
         },
 
-        /** 이벤트 리스너 설정 */
-        setupEventListeners() {
-            const bus = Utils.eventBus;
+         /** 이벤트 리스너 설정 */
+         setupEventListeners() {
+             const bus = Utils.eventBus;
+             const self = this;
 
-            bus.on('crop_harvested', (data) => {
-                const crop = CROP_DATA[data.cropId];
-                if (crop) this.show(`🌾 ${crop.name} 수확!`, 'success');
-            });
+             // 각 이벤트 핸들러를 함수로 저장하여 나중에 제거 가능하게 함
+             _eventHandlers.crop_harvested = (data) => {
+                 const crop = CROP_DATA[data.cropId];
+                 if (crop) self.show(`🌾 ${crop.name} 수확!`, 'success');
+             };
 
-            bus.on('crop_planted', (data) => {
-                const crop = CROP_DATA[data.cropId];
-                if (crop) this.show(`🌱 ${crop.name} 씨앗을 심었습니다`, 'info');
-            });
+             _eventHandlers.crop_planted = (data) => {
+                 const crop = CROP_DATA[data.cropId];
+                 if (crop) self.show(`🌱 ${crop.name} 씨앗을 심었습니다`, 'info');
+             };
 
-            bus.on('crop_withered', () => {
-                this.show('💀 계절이 바뀌어 작물이 시들었습니다...', 'warning');
-            });
+             _eventHandlers.crop_withered = () => {
+                 self.show('💀 계절이 바뀌어 작물이 시들었습니다...', 'warning');
+             };
 
-            bus.on('item_purchased', (data) => {
-                const itemData = window.ITEM_DATA[data.itemId] || window.CROP_DATA[data.itemId] || window.ANIMAL_DATA[data.itemId];
-                const name = itemData ? itemData.name : '아이템';
-                this.show(`🛒 ${name} 구매 완료!`, 'info');
-            });
+             _eventHandlers.item_purchased = (data) => {
+                 const itemData = window.ITEM_DATA[data.itemId] || window.CROP_DATA[data.itemId] || window.ANIMAL_DATA[data.itemId];
+                 const name = itemData ? itemData.name : '아이템';
+                 self.show(`🛒 ${name} 구매 완료!`, 'info');
+             };
 
-            bus.on('item_sold', (data) => {
-                const itemData = window.ITEM_DATA[data.itemId] || window.CROP_DATA[data.itemId] || window.ANIMAL_DATA[data.itemId];
-                const name = itemData ? itemData.name : '아이템';
-                this.show(`💰 ${name} 판매! +${Utils.formatNumber(data.totalGold || 0)}G`, 'success');
-            });
+             _eventHandlers.item_sold = (data) => {
+                 const itemData = window.ITEM_DATA[data.itemId] || window.CROP_DATA[data.itemId] || window.ANIMAL_DATA[data.itemId];
+                 const name = itemData ? itemData.name : '아이템';
+                 self.show(`💰 ${name} 판매! +${Utils.formatNumber(data.totalGold || 0)}G`, 'success');
+             };
 
-            bus.on('quest_completed', (data) => {
-                const quest = QUEST_DATA[data.questId];
-                if (quest) this.show(`📜 퀘스트 완료: ${quest.name}`, 'reward', 5000);
-            });
+             _eventHandlers.quest_completed = (data) => {
+                 const quest = QUEST_DATA[data.questId];
+                 if (quest) self.show(`📜 퀘스트 완료: ${quest.name}`, 'reward', 5000);
+             };
 
-            bus.on('animal_fed', (data) => {
-                this.show(`🥕 ${data.name || '동물'}에게 먹이를 줬습니다`, 'info');
-            });
+             _eventHandlers.animal_fed = (data) => {
+                 self.show(`🥕 ${data.name || '동물'}에게 먹이를 줬습니다`, 'info');
+             };
 
-            bus.on('product_collected', (data) => {
-                const productName = data.product ? data.product.name : data.productName || '생산품';
-                this.show(`📦 ${productName} 수집!`, 'success');
-            });
-            bus.on('season_changed', (data) => {
-                const seasonEmojis = { spring: '🌸', summer: '☀️', fall: '🍂', winter: '❄️' };
-                const seasonNames = { spring: '봄', summer: '여름', fall: '가을', winter: '겨울' };
-                const emoji = seasonEmojis[data.season] || '🌿';
-                const name = seasonNames[data.season] || data.season;
-                this.show(`${emoji} ${name}이 되었습니다!`, 'info', 5000);
-            });
+             _eventHandlers.product_collected = (data) => {
+                 const productName = data.product ? data.product.name : data.productName || '생산품';
+                 self.show(`📦 ${productName} 수집!`, 'success');
+             };
 
-            bus.on('weather_changed', (data) => {
-                if (data && data.weather) {
-                    const weatherNames = {
-                        sunny: '맑음', cloudy: '흐림', rainy: '비', stormy: '폭풍',
-                        snowy: '눈', windy: '바람', foggy: '안개'
-                    };
-                    const name = weatherNames[data.weather] || data.weather;
-                    this.show(`${WeatherSystem.getWeatherEmoji()} 날씨: ${name}`, 'info');
-                }
-            });
+             _eventHandlers.season_changed = (data) => {
+                 const seasonEmojis = { spring: '🌸', summer: '☀️', fall: '🍂', winter: '❄️' };
+                 const seasonNames = { spring: '봄', summer: '여름', fall: '가을', winter: '겨울' };
+                 const emoji = seasonEmojis[data.season] || '🌿';
+                 const name = seasonNames[data.season] || data.season;
+                 self.show(`${emoji} ${name}이 되었습니다!`, 'info', 5000);
+             };
 
-            bus.on('level_up', (data) => {
-                this.showLevelUp(data.level);
-            });
+             _eventHandlers.weather_changed = (data) => {
+                 if (data && data.weather) {
+                     const weatherNames = {
+                         sunny: '맑음', cloudy: '흐림', rainy: '비', stormy: '폭풍',
+                         snowy: '눈', windy: '바람', foggy: '안개'
+                     };
+                     const name = weatherNames[data.weather] || data.weather;
+                     self.show(`${WeatherSystem.getWeatherEmoji()} 날씨: ${name}`, 'info');
+                 }
+             };
 
-            bus.on('autoSaved', () => {
-                this.show('💾 자동 저장 완료', 'info', 2000);
-            });
-        }
+             _eventHandlers.level_up = (data) => {
+                 self.showLevelUp(data.level);
+             };
+
+             _eventHandlers.autoSaved = () => {
+                 self.show('💾 자동 저장 완료', 'info', 2000);
+             };
+
+             // 모든 이벤트 리스너 등록
+             bus.on('crop_harvested', _eventHandlers.crop_harvested);
+             bus.on('crop_planted', _eventHandlers.crop_planted);
+             bus.on('crop_withered', _eventHandlers.crop_withered);
+             bus.on('item_purchased', _eventHandlers.item_purchased);
+             bus.on('item_sold', _eventHandlers.item_sold);
+             bus.on('quest_completed', _eventHandlers.quest_completed);
+             bus.on('animal_fed', _eventHandlers.animal_fed);
+             bus.on('product_collected', _eventHandlers.product_collected);
+             bus.on('season_changed', _eventHandlers.season_changed);
+             bus.on('weather_changed', _eventHandlers.weather_changed);
+             bus.on('level_up', _eventHandlers.level_up);
+             bus.on('autoSaved', _eventHandlers.autoSaved);
+         }
     };
 })();
