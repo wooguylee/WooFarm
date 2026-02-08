@@ -44,12 +44,13 @@
     /** @private 틱 타이머 ID */
     _tickTimer: null,
 
-    // ── 초기화 ────────────────────────────────────────
+     // ── 초기화 ────────────────────────────────────────
 
     /**
      * 시간 시스템을 초기 상태로 설정합니다.
      */
     init: function () {
+      this.cleanup();
       this.currentDay = 1;
       this.currentSeason = 'spring';
       this.currentHour = 6;
@@ -60,6 +61,14 @@
       this._tickTimer = null;
 
       console.log('[TimeSystem] 초기화 완료');
+    },
+
+    /**
+     * 시간 시스템을 정리합니다.
+     */
+    cleanup: function () {
+      this._stopTimer();
+      console.log('[TimeSystem] 정리 완료');
     },
 
     /**

@@ -10,31 +10,79 @@
     let confirmCallback = null;
 
     window.ModalUI = {
+        // ── 이벤트 리스너 추적 ────────────────────────────
+        _eventHandlers: {},
+        _closeButtons: [],
+        _nextDayBtn: null,
+
         init() {
+            // 기존 리스너 정리 (중복 방지)
+            this.cleanup();
+
             overlay = document.getElementById('modal-overlay');
 
             // 모든 닫기 버튼에 이벤트 연결
+            const modalCloseHandler = () => this.closeModal();
             document.querySelectorAll('.modal-close').forEach(btn => {
-                btn.addEventListener('click', () => this.closeModal());
+                btn.addEventListener('click', modalCloseHandler);
+                this._closeButtons.push({ element: btn, handler: modalCloseHandler });
             });
 
             // 오버레이 클릭 시 닫기
             if (overlay) {
-                overlay.addEventListener('click', (e) => {
+                const overlayClickHandler = (e) => {
                     if (e.target === overlay) {
                         this.closeModal();
                     }
-                });
+                };
+                overlay.addEventListener('click', overlayClickHandler);
+                this._eventHandlers.overlayClick = { element: overlay, handler: overlayClickHandler };
             }
 
             // 다음 날 버튼
             const btnNextDay = document.getElementById('btn-next-day');
             if (btnNextDay) {
-                btnNextDay.addEventListener('click', () => {
+                const nextDayHandler = () => {
                     this.closeModal();
                     Utils.eventBus.emit('next_day_clicked');
-                });
+                };
+                btnNextDay.addEventListener('click', nextDayHandler);
+                this._eventHandlers.nextDay = { element: btnNextDay, handler: nextDayHandler };
+                this._nextDayBtn = { element: btnNextDay, handler: nextDayHandler };
             }
+        },
+
+        /**
+         * ModalUI의 모든 이벤트 리스너를 정리합니다.
+         */
+        cleanup() {
+            // 닫기 버튼 리스너 제거
+            this._closeButtons.forEach(({ element, handler }) => {
+                if (element) {
+                    element.removeEventListener('click', handler);
+                }
+            });
+            this._closeButtons = [];
+
+            // 오버레이 리스너 제거
+            if (this._eventHandlers.overlayClick) {
+                const { element, handler } = this._eventHandlers.overlayClick;
+                if (element) {
+                    element.removeEventListener('click', handler);
+                }
+            }
+
+            // 다음 날 버튼 리스너 제거
+            if (this._eventHandlers.nextDay) {
+                const { element, handler } = this._eventHandlers.nextDay;
+                if (element) {
+                    element.removeEventListener('click', handler);
+                }
+            }
+
+            this._eventHandlers = {};
+            this._nextDayBtn = null;
+            console.log('[ModalUI] 이벤트 리스너 정리 완료');
         },
 
         /** 모달 열기 */

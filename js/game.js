@@ -197,7 +197,7 @@
             DecorationSystem.renderDecorations();
 
             // 환영 알림
-            NotificationUI.show('🌾 WooFarm에 오신 것을 환영합니다! 농장을 가꿔보세요!', 'success', 5000);
+            // NotificationUI.show('🌾 WooFarm에 오신 것을 환영합니다! 농장을 가꿔보세요!', 'success', 5000);
 
             // 도구바와 씨앗 패널, 로그 패널 표시
             const toolbar = document.getElementById('toolbar');
@@ -214,7 +214,7 @@
         loadGame() {
             const saveData = SaveManager.load();
             if (!saveData) {
-                NotificationUI.show('저장 데이터가 없습니다.', 'error');
+                // NotificationUI.show('저장 데이터가 없습니다.', 'error');
                 return;
             }
 
@@ -298,7 +298,7 @@
               // HUD 업데이트
               HudUI.update();
 
-              NotificationUI.show('💾 게임을 불러왔습니다!', 'success');
+            //   NotificationUI.show('💾 게임을 불러왔습니다!', 'success');
         },
 
          /** 모든 시스템 초기화 */
@@ -314,16 +314,21 @@
              RankingSystem.init();
          },
 
-         /** 모든 시스템 정리 (메모리 누수 방지) */
-         cleanupAllSystems() {
-             FarmSystem.cleanup?.();
-             InventorySystem.cleanup?.();
-             ShopSystem.cleanup?.();
-             AnimalSystem.cleanup?.();
-             QuestSystem.cleanup?.();
-             DecorationSystem.cleanup?.();
-             console.log('[Game] 모든 시스템 정리 완료');
-         },
+          /** 모든 시스템 정리 (메모리 누수 방지) */
+          cleanupAllSystems() {
+              TimeSystem.cleanup?.();
+              WeatherSystem.cleanup?.();
+              FarmSystem.cleanup?.();
+              InventorySystem.cleanup?.();
+              ShopSystem.cleanup?.();
+              AnimalSystem.cleanup?.();
+              QuestSystem.cleanup?.();
+              DecorationSystem.cleanup?.();
+              ModalUI.cleanup?.();
+              NotificationUI.cleanup?.();
+              HudUI.cleanup?.();
+              console.log('[Game] 모든 시스템 정리 완료');
+          },
 
         /** UI 초기화 */
         initUI() {
@@ -510,7 +515,7 @@
         saveGame() {
             const state = this.getGameState();
             SaveManager.save(state);
-            NotificationUI.show('💾 게임이 저장되었습니다!', 'success', 2000);
+            // NotificationUI.show('💾 게임이 저장되었습니다!', 'success', 2000);
         },
 
         /** 게임 상태 수집 */

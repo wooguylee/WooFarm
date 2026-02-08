@@ -58,28 +58,45 @@
   /** 비/눈 파티클 최대 개수 */
   var MAX_PARTICLES = 40;
 
-  window.WeatherSystem = {
-    // ── 상태 ──────────────────────────────────────────
-    currentWeather: 'sunny',
-    forecast: 'sunny',
+   window.WeatherSystem = {
+     // ── 상태 ──────────────────────────────────────────
+     currentWeather: 'sunny',
+     forecast: 'sunny',
+     _eventHandlers: {},
 
     // ── 초기화 ────────────────────────────────────────
 
-    /**
-     * 날씨 시스템을 초기화하고 이벤트 리스너를 등록합니다.
-     */
-    init: function () {
-      var season = window.TimeSystem ? window.TimeSystem.currentSeason : 'spring';
-      this.currentWeather = this.generateWeather(season);
-      this.forecast = this.generateWeather(season);
+     /**
+      * 날씨 시스템을 초기화하고 이벤트 리스너를 등록합니다.
+      */
+     init: function () {
+       this.cleanup();
+       var season = window.TimeSystem ? window.TimeSystem.currentSeason : 'spring';
+       this.currentWeather = this.generateWeather(season);
+       this.forecast = this.generateWeather(season);
 
-      // 이벤트 리스너 등록
-      this._bindEvents();
+       // 이벤트 리스너 등록
+       this._bindEvents();
 
-      console.log('[WeatherSystem] 초기화 완료 - 현재: ' +
-        WEATHER_NAMES_KR[this.currentWeather] + ', 예보: ' +
-        WEATHER_NAMES_KR[this.forecast]);
-    },
+       console.log('[WeatherSystem] 초기화 완료 - 현재: ' +
+         WEATHER_NAMES_KR[this.currentWeather] + ', 예보: ' +
+         WEATHER_NAMES_KR[this.forecast]);
+     },
+
+     /**
+      * 날씨 시스템을 정리합니다.
+      */
+     cleanup: function () {
+       if (this._eventHandlers) {
+         Object.keys(this._eventHandlers).forEach(key => {
+           if (this._eventHandlers[key]) {
+             eventBus.off(key, this._eventHandlers[key]);
+           }
+         });
+         this._eventHandlers = {};
+       }
+       console.log('[WeatherSystem] 정리 완료');
+     },
 
     // ── 날씨 생성 ────────────────────────────────────
 
@@ -233,19 +250,21 @@
     /**
      * @private 이벤트 리스너를 바인딩합니다.
      */
-    _bindEvents: function () {
-      var self = this;
+     _bindEvents: function () {
+       var self = this;
 
-      // 새 하루 시작 시 날씨 갱신
-      eventBus.on('day_start', function () {
-        self.advanceDay();
-      });
+       // 새 하루 시작 시 날씨 갱신
+       this._eventHandlers.day_start = function () {
+         self.advanceDay();
+       };
+       eventBus.on('day_start', this._eventHandlers.day_start);
 
-      // 시간 변경 시 시간대 시각 효과 갱신
-      eventBus.on('hour_changed', function () {
-        self._applyTimeOverlay();
-      });
-    },
+       // 시간 변경 시 시간대 시각 효과 갱신
+       this._eventHandlers.hour_changed = function () {
+         self._applyTimeOverlay();
+       };
+       eventBus.on('hour_changed', this._eventHandlers.hour_changed);
+     },
 
     /**
      * @private 날씨 파티클(비/눈)을 #weather-layer에 렌더링합니다.
