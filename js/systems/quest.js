@@ -14,32 +14,76 @@ window.QuestSystem = (function () {
    * 각 항목: { questId, progress: [{ type, target, current, required }] }
    * @type {Array<Object>}
    */
-  var _activeQuests = [];
+   var _activeQuests = [];
 
-  /** @type {Array<string>} 완료된 퀘스트 ID 배열 */
-  var _completedQuests = [];
+   /** @type {Array<string>} 완료된 퀘스트 ID 배열 */
+   var _completedQuests = [];
 
-  // ===== 초기화 =====
+   /** @private 등록된 이벤트 리스너 추적 (메모리 누수 방지) */
+   var _eventHandlers = {};
 
-  /**
-   * 퀘스트 시스템을 초기화한다.
-   * 이벤트 리스너를 등록하고 첫 번째 챕터 퀘스트를 자동 활성화한다.
-   */
-  function init() {
-    // 퀘스트 진행에 영향을 주는 이벤트 리스너 등록
-    eventBus.on('crop_harvested', function (data) { checkProgress('crop_harvested', data); });
-    eventBus.on('item_sold', function (data) { checkProgress('item_sold', data); });
-    eventBus.on('animal_added', function (data) { checkProgress('animal_added', data); });
-    eventBus.on('product_collected', function (data) { checkProgress('product_collected', data); });
-    eventBus.on('gold_changed', function (data) { checkProgress('gold_changed', data); });
-    eventBus.on('decoration_placed', function (data) { checkProgress('decoration_placed', data); });
-    eventBus.on('level_up', function (data) { checkProgress('level_up', data); });
+   // ===== 초기화 =====
 
-    // 첫 챕터 퀘스트 자동 활성화
-    _activateInitialQuests();
+   /**
+    * 퀘스트 시스템을 정리한다 (메모리 누수 방지).
+    * @private
+    */
+   function cleanup() {
+     // 기존 리스너 모두 제거
+     if (_eventHandlers.crop_harvested) {
+       eventBus.off('crop_harvested', _eventHandlers.crop_harvested);
+     }
+     if (_eventHandlers.item_sold) {
+       eventBus.off('item_sold', _eventHandlers.item_sold);
+     }
+     if (_eventHandlers.animal_added) {
+       eventBus.off('animal_added', _eventHandlers.animal_added);
+     }
+     if (_eventHandlers.product_collected) {
+       eventBus.off('product_collected', _eventHandlers.product_collected);
+     }
+     if (_eventHandlers.gold_changed) {
+       eventBus.off('gold_changed', _eventHandlers.gold_changed);
+     }
+     if (_eventHandlers.decoration_placed) {
+       eventBus.off('decoration_placed', _eventHandlers.decoration_placed);
+     }
+     if (_eventHandlers.level_up) {
+       eventBus.off('level_up', _eventHandlers.level_up);
+     }
+     _eventHandlers = {};
+   }
 
-    console.log('[QuestSystem] 초기화 완료.');
-  }
+   /**
+    * 퀘스트 시스템을 초기화한다.
+    * 이벤트 리스너를 등록하고 첫 번째 챕터 퀘스트를 자동 활성화한다.
+    */
+   function init() {
+     // 기존 리스너 정리 (중복 방지)
+     cleanup();
+
+     // 퀘스트 진행에 영향을 주는 이벤트 리스너 등록 (함수 참조 저장)
+     _eventHandlers.crop_harvested = function (data) { checkProgress('crop_harvested', data); };
+     _eventHandlers.item_sold = function (data) { checkProgress('item_sold', data); };
+     _eventHandlers.animal_added = function (data) { checkProgress('animal_added', data); };
+     _eventHandlers.product_collected = function (data) { checkProgress('product_collected', data); };
+     _eventHandlers.gold_changed = function (data) { checkProgress('gold_changed', data); };
+     _eventHandlers.decoration_placed = function (data) { checkProgress('decoration_placed', data); };
+     _eventHandlers.level_up = function (data) { checkProgress('level_up', data); };
+
+     eventBus.on('crop_harvested', _eventHandlers.crop_harvested);
+     eventBus.on('item_sold', _eventHandlers.item_sold);
+     eventBus.on('animal_added', _eventHandlers.animal_added);
+     eventBus.on('product_collected', _eventHandlers.product_collected);
+     eventBus.on('gold_changed', _eventHandlers.gold_changed);
+     eventBus.on('decoration_placed', _eventHandlers.decoration_placed);
+     eventBus.on('level_up', _eventHandlers.level_up);
+
+     // 첫 챕터 퀘스트 자동 활성화
+     _activateInitialQuests();
+
+     console.log('[QuestSystem] 초기화 완료.');
+   }
 
   /**
    * 초기 퀘스트를 활성화한다.
@@ -603,25 +647,26 @@ window.QuestSystem = (function () {
     console.log('[QuestSystem] 상태 복원 완료. 활성:', _activeQuests.length, '완료:', _completedQuests.length);
   }
 
-  // ===== 공개 API =====
+   // ===== 공개 API =====
 
-  return {
-    /** 활성 퀘스트 배열 (읽기 전용) */
-    get activeQuests() { return _activeQuests; },
-    /** 완료 퀘스트 배열 (읽기 전용) */
-    get completedQuests() { return _completedQuests; },
+   return {
+     /** 활성 퀘스트 배열 (읽기 전용) */
+     get activeQuests() { return _activeQuests; },
+     /** 완료 퀘스트 배열 (읽기 전용) */
+     get completedQuests() { return _completedQuests; },
 
-    init: init,
-    activateQuest: activateQuest,
-    checkProgress: checkProgress,
-    completeQuest: completeQuest,
-    isQuestComplete: isQuestComplete,
-    getQuestProgress: getQuestProgress,
-    getActiveQuests: getActiveQuests,
-    getCompletedQuests: getCompletedQuests,
-    getTotalQuestsCompleted: getTotalQuestsCompleted,
-    renderQuestModal: renderQuestModal,
-    getState: getState,
-    loadState: loadState
-  };
+     init: init,
+     cleanup: cleanup,
+     activateQuest: activateQuest,
+     checkProgress: checkProgress,
+     completeQuest: completeQuest,
+     isQuestComplete: isQuestComplete,
+     getQuestProgress: getQuestProgress,
+     getActiveQuests: getActiveQuests,
+     getCompletedQuests: getCompletedQuests,
+     getTotalQuestsCompleted: getTotalQuestsCompleted,
+     renderQuestModal: renderQuestModal,
+     getState: getState,
+     loadState: loadState
+   };
 })();

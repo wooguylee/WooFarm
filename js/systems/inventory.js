@@ -27,12 +27,16 @@
     /** @private 슬롯 ID 카운터 */
     _nextSlotId: 1,
 
+    /** @private 등록된 이벤트 핸들러 추적 (메모리 누수 방지) */
+    _eventHandlers: {},
+
     // ── 초기화 ────────────────────────────────────────
 
     /**
      * 인벤토리 시스템을 초기화합니다.
      */
      init: function () {
+       this.cleanup();  // 기존 리스너 정리 (중복 방지)
        this.items = [];
        this._selectedSeed = null;
        this._nextSlotId = 1;
@@ -183,30 +187,41 @@
        });
      },
 
-    /**
-     * 특정 아이템의 총 보유 수량을 반환합니다.
-     * @param {string} itemId
-     * @returns {number}
-     */
-    getItemCount: function (itemId) {
-      var total = 0;
-      for (var i = 0; i < this.items.length; i++) {
-        if (this.items[i].itemId === itemId) {
-          total += this.items[i].quantity;
-        }
-      }
-      return total;
-    },
+     /**
+      * 특정 아이템의 총 보유 수량을 반환합니다.
+      * @param {string} itemId
+      * @returns {number}
+      */
+     getItemCount: function (itemId) {
+       var total = 0;
+       for (var i = 0; i < this.items.length; i++) {
+         if (this.items[i].itemId === itemId) {
+           total += this.items[i].quantity;
+         }
+       }
+       return total;
+     },
 
-    /**
-     * 모든 아이템 배열의 복사본을 반환합니다.
-     * @returns {Array<{id: string, itemId: string, quantity: number}>}
-     */
-    getItems: function () {
-      return this.items.map(function (item) {
-        return { id: item.id, itemId: item.itemId, quantity: item.quantity };
-      });
-    },
+     /**
+      * 특정 아이템을 충분히 보유 중인지 확인합니다.
+      * @param {string} itemId
+      * @param {number} [quantity=1]
+      * @returns {boolean}
+      */
+     hasItem: function (itemId, quantity) {
+       quantity = quantity || 1;
+       return this.getItemCount(itemId) >= quantity;
+     },
+
+     /**
+      * 모든 아이템 배열의 복사본을 반환합니다.
+      * @returns {Array<{id: string, itemId: string, quantity: number}>}
+      */
+     getItems: function () {
+       return this.items.map(function (item) {
+         return { id: item.id, itemId: item.itemId, quantity: item.quantity };
+       });
+     },
 
     /**
      * 특정 타입의 아이템만 필터링하여 반환합니다.
@@ -368,93 +383,81 @@
         emptySlot.className = 'inventory-slot inventory-slot-empty';
         container.appendChild(emptySlot);
       }
-    },
-
-    /**
-     * 현재 계절에 심을 수 있는 씨앗 패널을 렌더링합니다.
-     * #seed-list 요소에 씨앗 목록을 채웁니다.
-     * @param {string} season - 현재 계절
-     */
-     renderSeedPanel: function (season) {
-       var container = document.getElementById('seed-list');
-       if (!container) {
-         console.warn('[InventorySystem] #seed-list 요소를 찾을 수 없습니다');
-         return;
-       }
-
-       var self = this;
-       container.innerHTML = '';
-
-       var seeds = this.getSeedsForSeason(season);
-
-       if (seeds.length === 0) {
-         var emptyMsg = document.createElement('div');
-         emptyMsg.className = 'seed-list-empty';
-         emptyMsg.textContent = '심을 수 있는 씨앗이 없습니다';
-         container.appendChild(emptyMsg);
-         return;
-       }
-
-       for (var i = 0; i < seeds.length; i++) {
-         var seedEl = this._createSeedElement(seeds[i]);
-         container.appendChild(seedEl);
-       }
      },
 
-     /**
-      * 씨앗 패널의 수량만 업데이트합니다 (메모리 효율)
-      */
-     _updateSeedPanelQuantities: function () {
-       var container = document.getElementById('seed-list');
-       if (!container) return;
+     // ── 내부 헬퍼 ────────────────────────────────────
 
-       var seedItems = container.querySelectorAll('.seed-item');
-       var self = this;
+      /**
+       * @private 이벤트 리스너를 바인딩합니다.
+       */
+      _bindEvents: function () {
+        var self = this;
 
-       for (var i = 0; i < seedItems.length; i++) {
-         var seedItem = seedItems[i];
-         // 이전 방식에서는 data 속성이 없으므로 생략하고
-         // 실제로는 재렌더링이 필요하면 위의 renderSeedPanel 사용
-       }
-     },
+        // 기존 리스너 정리 (중복 방지)
+        if (this._eventHandlers.crop_harvested) {
+          eventBus.off('crop_harvested', this._eventHandlers.crop_harvested);
+        }
+        if (this._eventHandlers.crop_planted) {
+          eventBus.off('crop_planted', this._eventHandlers.crop_planted);
+        }
 
-    // ── 내부 헬퍼 ────────────────────────────────────
+        // 수확 시 자동으로 인벤토리에 추가
+        this._eventHandlers.crop_harvested = function (data) {
+          if (data && data.itemId) {
+            var added = self.addItem(data.itemId, data.quantity || 1);
+            if (!added) {
+              console.warn('[InventorySystem] 인벤토리가 가득 차서 수확물을 보관할 수 없습니다');
+            }
+          }
+        };
 
-     /**
-      * @private 이벤트 리스너를 바인딩합니다.
-      */
-     _bindEvents: function () {
-       var self = this;
+        // 씨앗 심기 후 씨앗 패널 자동 갱신 (debounce 처리)
+        this._eventHandlers.crop_planted = function (data) {
+          // 씨앗 패널이 열려있으면 다시 렌더링하여 수량 업데이트
+          var seedPanel = document.getElementById('seed-panel');
+          if (seedPanel && !seedPanel.classList.contains('hidden')) {
+            // 이전 타임아웃 취소 (빠른 연속 호출 방지)
+            if (self._seedPanelUpdateTimeout) {
+              clearTimeout(self._seedPanelUpdateTimeout);
+            }
+            
+            // 150ms 디바운스로 마지막 호출만 실행 - 메모리 누수 방지
+            self._seedPanelUpdateTimeout = setTimeout(function () {
+              var currentSeason = window.TimeSystem ? window.TimeSystem.currentSeason : 'spring';
+              self.renderSeedPanel(currentSeason);
+              self._seedPanelUpdateTimeout = null;
+            }, 150);
+          }
+        };
 
-       // 수확 시 자동으로 인벤토리에 추가
-       eventBus.on('crop_harvested', function (data) {
-         if (data && data.itemId) {
-           var added = self.addItem(data.itemId, data.quantity || 1);
-           if (!added) {
-             console.warn('[InventorySystem] 인벤토리가 가득 차서 수확물을 보관할 수 없습니다');
-           }
-         }
-       });
+        eventBus.on('crop_harvested', this._eventHandlers.crop_harvested);
+        eventBus.on('crop_planted', this._eventHandlers.crop_planted);
+      },
 
-       // 씨앗 심기 후 씨앗 패널 자동 갱신 (debounce 처리)
-       eventBus.on('crop_planted', function (data) {
-         // 씨앗 패널이 열려있으면 다시 렌더링하여 수량 업데이트
-         var seedPanel = document.getElementById('seed-panel');
-         if (seedPanel && !seedPanel.classList.contains('hidden')) {
-           // 이전 타임아웃 취소 (빠른 연속 호출 방지)
-           if (self._seedPanelUpdateTimeout) {
-             clearTimeout(self._seedPanelUpdateTimeout);
-           }
-           
-           // 150ms 디바운스로 마지막 호출만 실행 - 메모리 누수 방지
-           self._seedPanelUpdateTimeout = setTimeout(function () {
-             var currentSeason = window.TimeSystem ? window.TimeSystem.currentSeason : 'spring';
-             self.renderSeedPanel(currentSeason);
-             self._seedPanelUpdateTimeout = null;
-           }, 150);
-         }
-       });
-     },
+      /**
+       * @private 이벤트 리스너를 정리합니다 (메모리 누수 방지).
+       */
+      cleanup: function () {
+        if (this._eventHandlers.crop_harvested) {
+          eventBus.off('crop_harvested', this._eventHandlers.crop_harvested);
+        }
+        if (this._eventHandlers.crop_planted) {
+          eventBus.off('crop_planted', this._eventHandlers.crop_planted);
+        }
+        this._eventHandlers = {};
+        
+        // 대기 중인 타이머 정리
+        if (this._seedPanelUpdateTimeout) {
+          clearTimeout(this._seedPanelUpdateTimeout);
+          this._seedPanelUpdateTimeout = null;
+        }
+        if (this._seedPanelRenderTimeout) {
+          clearTimeout(this._seedPanelRenderTimeout);
+          this._seedPanelRenderTimeout = null;
+        }
+        
+        console.log('[InventorySystem] 이벤트 리스너 정리 완료');
+      },
 
     /**
      * @private 아이템 데이터를 조회합니다.
