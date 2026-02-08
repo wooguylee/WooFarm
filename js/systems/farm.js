@@ -587,40 +587,37 @@
     /**
      * @private 씨앗 도구를 사용합니다 (씨앗 선택 패널 열기).
      */
-    _useSeed: function (row, col, tile) {
-      if (tile.state !== 'tilled') return;
+     _useSeed: function (row, col, tile) {
+       if (tile.state !== 'tilled') return;
 
-      // InventorySystem에서 선택된 씨앗 확인
-      if (window.InventorySystem) {
-        var selectedSeed = window.InventorySystem.getSelectedSeed();
-        if (selectedSeed) {
-          // 씨앗 ID에서 작물 ID 추출 (예: 'tomato_seed' → 'tomato')
-          var cropId = selectedSeed.replace('_seed', '');
-          var success = this.plantCrop(row, col, cropId);
-          
-          // 성공하면 씨앗 패널을 열어서 업데이트된 수량 표시
-          if (success) {
-            var season = window.TimeSystem ? window.TimeSystem.currentSeason : 'spring';
-            window.InventorySystem.renderSeedPanel(season);
-            
-            // 씨앗 패널 열기
-            var seedPanel = document.getElementById('seed-panel');
-            if (seedPanel) {
-              seedPanel.classList.remove('hidden');
-            }
-          }
-        } else {
-          // 씨앗이 선택되지 않았으면 씨앗 패널 열기
-          var season = window.TimeSystem ? window.TimeSystem.currentSeason : 'spring';
-          window.InventorySystem.renderSeedPanel(season);
-          
-          var seedPanel = document.getElementById('seed-panel');
-          if (seedPanel) {
-            seedPanel.classList.remove('hidden');
-          }
-        }
-      }
-    },
+       // InventorySystem에서 선택된 씨앗 확인
+       if (window.InventorySystem) {
+         var selectedSeed = window.InventorySystem.getSelectedSeed();
+         if (selectedSeed) {
+           // 씨앗 ID에서 작물 ID 추출 (예: 'tomato_seed' → 'tomato')
+           var cropId = selectedSeed.replace('_seed', '');
+           var success = this.plantCrop(row, col, cropId);
+           
+           // 성공하면 씨앗 패널 열기 (이벤트 리스너에서 자동 갱신됨)
+           if (success) {
+             // 씨앗 패널 열기 - crop_planted 이벤트가 발생하여 자동 갱신됨
+             var seedPanel = document.getElementById('seed-panel');
+             if (seedPanel) {
+               seedPanel.classList.remove('hidden');
+             }
+           }
+         } else {
+           // 씨앗이 선택되지 않았으면 씨앗 패널 열고 렌더링
+           var season = window.TimeSystem ? window.TimeSystem.currentSeason : 'spring';
+           window.InventorySystem.renderSeedPanel(season);
+           
+           var seedPanel = document.getElementById('seed-panel');
+           if (seedPanel) {
+             seedPanel.classList.remove('hidden');
+           }
+         }
+       }
+     },
 
     /**
      * @private 수확 도구를 사용합니다.
