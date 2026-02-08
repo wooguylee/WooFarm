@@ -18,41 +18,72 @@ window.ShopSystem = (function () {
   /** @type {string} 현재 활성 탭 ('buy' | 'sell') */
   var _currentTab = 'buy';
 
-  /** @type {string|null} 현재 계절 (시즌별 할인/필터에 사용) */
-  var _currentSeason = 'spring';
+   /** @type {string|null} 현재 계절 (시즌별 할인/필터에 사용) */
+   var _currentSeason = 'spring';
 
-  // ===== 초기화 =====
+   /** @private 등록된 이벤트 핸들러 추적 (메모리 누수 방지) */
+   var _eventHandlers = {};
 
-  /**
-   * 상점 시스템을 초기화한다.
-   * 이벤트 리스너를 등록하고 초기 골드를 표시한다.
-   */
-  function init() {
-    // 계절 변경 시 상점 갱신
-    eventBus.on('season_changed', _onSeasonChanged);
+   // ===== 초기화 =====
 
-    // 구매/판매 이벤트 시 골드 디스플레이 갱신
-    eventBus.on('item_purchased', _updateGoldDisplay);
-    eventBus.on('item_sold', _updateGoldDisplay);
-    eventBus.on('gold_changed', _updateGoldDisplay);
+   /**
+    * 상점 시스템을 정리한다 (메모리 누수 방지).
+    * @private
+    */
+   function cleanup() {
+     if (_eventHandlers.season_changed) {
+       eventBus.off('season_changed', _eventHandlers.season_changed);
+     }
+     if (_eventHandlers.item_purchased) {
+       eventBus.off('item_purchased', _eventHandlers.item_purchased);
+     }
+     if (_eventHandlers.item_sold) {
+       eventBus.off('item_sold', _eventHandlers.item_sold);
+     }
+     if (_eventHandlers.gold_changed) {
+       eventBus.off('gold_changed', _eventHandlers.gold_changed);
+     }
+     _eventHandlers = {};
+   }
 
-    // 초기 골드 디스플레이 설정
-    _updateGoldDisplay();
+   /**
+    * 상점 시스템을 초기화한다.
+    * 이벤트 리스너를 등록하고 초기 골드를 표시한다.
+    */
+   function init() {
+     // 기존 리스너 정리 (중복 방지)
+     cleanup();
 
-    console.log('[ShopSystem] 초기화 완료. 보유 골드:', _gold);
-    // 상점 탭 및 카테고리 버튼 클릭 이벤트 설정
-    document.addEventListener('click', function(event) {
-      var tabBtn = event.target.closest('.shop-tab');
-      if (tabBtn && tabBtn.getAttribute('data-shop-tab')) {
-        renderShopModal(tabBtn.getAttribute('data-shop-tab'));
-      }
-      var catBtn = event.target.closest('.shop-cat');
-      if (catBtn && catBtn.getAttribute('data-cat')) {
-        _currentCategory = catBtn.getAttribute('data-cat');
-        _renderBuyTab();
-      }
-    });
-  }
+     // 계절 변경 시 상점 갱신
+     _eventHandlers.season_changed = _onSeasonChanged;
+     eventBus.on('season_changed', _eventHandlers.season_changed);
+
+     // 구매/판매 이벤트 시 골드 디스플레이 갱신
+     _eventHandlers.item_purchased = _updateGoldDisplay;
+     _eventHandlers.item_sold = _updateGoldDisplay;
+     _eventHandlers.gold_changed = _updateGoldDisplay;
+     
+     eventBus.on('item_purchased', _eventHandlers.item_purchased);
+     eventBus.on('item_sold', _eventHandlers.item_sold);
+     eventBus.on('gold_changed', _eventHandlers.gold_changed);
+
+     // 초기 골드 디스플레이 설정
+     _updateGoldDisplay();
+
+     console.log('[ShopSystem] 초기화 완료. 보유 골드:', _gold);
+     // 상점 탭 및 카테고리 버튼 클릭 이벤트 설정
+     document.addEventListener('click', function(event) {
+       var tabBtn = event.target.closest('.shop-tab');
+       if (tabBtn && tabBtn.getAttribute('data-shop-tab')) {
+         renderShopModal(tabBtn.getAttribute('data-shop-tab'));
+       }
+       var catBtn = event.target.closest('.shop-cat');
+       if (catBtn && catBtn.getAttribute('data-cat')) {
+         _currentCategory = catBtn.getAttribute('data-cat');
+         _renderBuyTab();
+       }
+     });
+   }
 
   // ===== 골드 관리 =====
 
@@ -682,25 +713,26 @@ window.ShopSystem = (function () {
     _updateGoldDisplay();
   }
 
-  // ===== 공개 API =====
+   // ===== 공개 API =====
 
-  return {
-    /** 보유 골드 (읽기 전용으로 사용 권장, 변경 시 addGold/removeGold 사용) */
-    get gold() { return _gold; },
-    set gold(val) { _gold = val; _updateGoldDisplay(); },
+   return {
+     /** 보유 골드 (읽기 전용으로 사용 권장, 변경 시 addGold/removeGold 사용) */
+     get gold() { return _gold; },
+     set gold(val) { _gold = val; _updateGoldDisplay(); },
 
-    init: init,
-    addGold: addGold,
-    removeGold: removeGold,
-    getBuyPrice: getBuyPrice,
-    getSellPrice: getSellPrice,
-    buyItem: buyItem,
-    sellItem: sellItem,
-    getAvailableSeeds: getAvailableSeeds,
-    refreshShop: refreshShop,
-    renderShopModal: renderShopModal,
-    getState: getState,
-    loadState: loadState,
+     init: init,
+     cleanup: cleanup,
+     addGold: addGold,
+     removeGold: removeGold,
+     getBuyPrice: getBuyPrice,
+     getSellPrice: getSellPrice,
+     buyItem: buyItem,
+     sellItem: sellItem,
+     getAvailableSeeds: getAvailableSeeds,
+     refreshShop: refreshShop,
+     renderShopModal: renderShopModal,
+     getState: getState,
+     loadState: loadState,
 
     /** 현재 구매 카테고리를 변경하고 모달을 갱신한다. */
     setCategory: function (category) {

@@ -30,24 +30,46 @@ window.DecorationSystem = (function () {
   /** @type {boolean} 장식 배치 모드 활성 여부 */
   var _decorMode = false;
 
-  /** @type {string|null} 현재 선택된 장식 ID (배치용) */
-  var _selectedDecor = null;
+   /** @type {string|null} 현재 선택된 장식 ID (배치용) */
+   var _selectedDecor = null;
 
-  // ===== 초기화 =====
+   /** @private 등록된 이벤트 핸들러 추적 (메모리 누수 방지) */
+   var _eventHandlers = {};
 
-  /**
-   * 장식 시스템을 초기화한다.
-   * 이벤트 리스너를 등록한다.
-   */
-  function init() {
-    // 계절 변경 시 계절 장식 처리
-    eventBus.on('season_changed', _onSeasonChanged);
+   // ===== 초기화 =====
 
-    // 하루 시작 시 장식 효과 적용
-    eventBus.on('day_start', _applyDailyEffects);
+   /**
+    * 장식 시스템을 정리한다 (메모리 누수 방지).
+    * @private
+    */
+   function cleanup() {
+     if (_eventHandlers.season_changed) {
+       eventBus.off('season_changed', _eventHandlers.season_changed);
+     }
+     if (_eventHandlers.day_start) {
+       eventBus.off('day_start', _eventHandlers.day_start);
+     }
+     _eventHandlers = {};
+   }
 
-    console.log('[DecorationSystem] 초기화 완료.');
-  }
+   /**
+    * 장식 시스템을 초기화한다.
+    * 이벤트 리스너를 등록한다.
+    */
+   function init() {
+     // 기존 리스너 정리 (중복 방지)
+     cleanup();
+
+     // 계절 변경 시 계절 장식 처리
+     _eventHandlers.season_changed = _onSeasonChanged;
+     eventBus.on('season_changed', _eventHandlers.season_changed);
+
+     // 하루 시작 시 장식 효과 적용
+     _eventHandlers.day_start = _applyDailyEffects;
+     eventBus.on('day_start', _eventHandlers.day_start);
+
+     console.log('[DecorationSystem] 초기화 완료.');
+   }
 
   // ===== 배치 모드 관리 =====
 
@@ -609,28 +631,29 @@ window.DecorationSystem = (function () {
 
   // ===== 공개 API =====
 
-  return {
-    /** 배치된 장식 배열 (읽기 전용) */
-    get placedDecorations() { return _placedDecorations; },
-    /** 배치 모드 상태 */
-    get decorMode() { return _decorMode; },
-    /** 선택된 장식 ID */
-    get selectedDecor() { return _selectedDecor; },
+   return {
+     /** 배치된 장식 배열 (읽기 전용) */
+     get placedDecorations() { return _placedDecorations; },
+     /** 배치 모드 상태 */
+     get decorMode() { return _decorMode; },
+     /** 선택된 장식 ID */
+     get selectedDecor() { return _selectedDecor; },
 
-    init: init,
-    enterDecorMode: enterDecorMode,
-    exitDecorMode: exitDecorMode,
-    toggleDecorMode: toggleDecorMode,
-    selectDecoration: selectDecoration,
-    placeDecoration: placeDecoration,
-    removeDecoration: removeDecoration,
-    getPlacedDecorations: getPlacedDecorations,
-    getDecorationAt: getDecorationAt,
-    getDecorationCount: getDecorationCount,
-    getActiveEffects: getActiveEffects,
-    renderDecorModal: renderDecorModal,
-    renderDecorations: renderDecorations,
-    getState: getState,
-    loadState: loadState
-  };
+     init: init,
+     cleanup: cleanup,
+     enterDecorMode: enterDecorMode,
+     exitDecorMode: exitDecorMode,
+     toggleDecorMode: toggleDecorMode,
+     selectDecoration: selectDecoration,
+     placeDecoration: placeDecoration,
+     removeDecoration: removeDecoration,
+     getPlacedDecorations: getPlacedDecorations,
+     getDecorationAt: getDecorationAt,
+     getDecorationCount: getDecorationCount,
+     getActiveEffects: getActiveEffects,
+     renderDecorModal: renderDecorModal,
+     renderDecorations: renderDecorations,
+     getState: getState,
+     loadState: loadState
+   };
 })();

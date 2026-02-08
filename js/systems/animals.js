@@ -14,24 +14,46 @@ window.AnimalSystem = (function () {
 
   // ===== 내부 상태 =====
 
-  /** @type {Array<Object>} 소유 동물 인스턴스 목록 */
-  var _ownedAnimals = [];
+   /** @type {Array<Object>} 소유 동물 인스턴스 목록 */
+   var _ownedAnimals = [];
 
-  // ===== 초기화 =====
+   /** @private 등록된 이벤트 핸들러 추적 (메모리 누수 방지) */
+   var _eventHandlers = {};
 
-  /**
-   * 동물 시스템을 초기화한다.
-   * 이벤트 리스너를 등록한다.
-   */
-  function init() {
-    // 하루 시작 시 일일 업데이트 수행
-    eventBus.on('day_start', dailyUpdate);
+   // ===== 초기화 =====
 
-    // 아이템 구매 이벤트 감시 (동물 구매 자동 처리는 ShopSystem에서 수행)
-    eventBus.on('item_purchased', _onItemPurchased);
+   /**
+    * 동물 시스템을 정리한다 (메모리 누수 방지).
+    * @private
+    */
+   function cleanup() {
+     if (_eventHandlers.day_start) {
+       eventBus.off('day_start', _eventHandlers.day_start);
+     }
+     if (_eventHandlers.item_purchased) {
+       eventBus.off('item_purchased', _eventHandlers.item_purchased);
+     }
+     _eventHandlers = {};
+   }
 
-    console.log('[AnimalSystem] 초기화 완료.');
-  }
+   /**
+    * 동물 시스템을 초기화한다.
+    * 이벤트 리스너를 등록한다.
+    */
+   function init() {
+     // 기존 리스너 정리 (중복 방지)
+     cleanup();
+
+     // 하루 시작 시 일일 업데이트 수행
+     _eventHandlers.day_start = dailyUpdate;
+     eventBus.on('day_start', _eventHandlers.day_start);
+
+     // 아이템 구매 이벤트 감시 (동물 구매 자동 처리는 ShopSystem에서 수행)
+     _eventHandlers.item_purchased = _onItemPurchased;
+     eventBus.on('item_purchased', _eventHandlers.item_purchased);
+
+     console.log('[AnimalSystem] 초기화 완료.');
+   }
 
   // ===== 동물 추가/제거 =====
 
@@ -591,27 +613,28 @@ window.AnimalSystem = (function () {
 
   // ===== 공개 API =====
 
-  return {
-    /** 소유 동물 목록 (직접 접근용, 읽기 전용 권장) */
-    get ownedAnimals() { return _ownedAnimals; },
+   return {
+     /** 소유 동물 목록 (직접 접근용, 읽기 전용 권장) */
+     get ownedAnimals() { return _ownedAnimals; },
 
-    init: init,
-    addAnimal: addAnimal,
-    removeAnimal: removeAnimal,
-    feedAnimal: feedAnimal,
-    feedAll: feedAll,
-    collectProduct: collectProduct,
-    collectAll: collectAll,
-    dailyUpdate: dailyUpdate,
-    getAnimalInfo: getAnimalInfo,
-    getOwnedAnimals: getOwnedAnimals,
-    getAnimalCount: getAnimalCount,
-    canAddAnimal: canAddAnimal,
-    getUniqueAnimalTypes: getUniqueAnimalTypes,
-    renderAnimalModal: renderAnimalModal,
-    renderAnimalArea: renderAnimalArea,
-    getState: getState,
-    loadState: loadState,
+     init: init,
+     cleanup: cleanup,
+     addAnimal: addAnimal,
+     removeAnimal: removeAnimal,
+     feedAnimal: feedAnimal,
+     feedAll: feedAll,
+     collectProduct: collectProduct,
+     collectAll: collectAll,
+     dailyUpdate: dailyUpdate,
+     getAnimalInfo: getAnimalInfo,
+     getOwnedAnimals: getOwnedAnimals,
+     getAnimalCount: getAnimalCount,
+     canAddAnimal: canAddAnimal,
+     getUniqueAnimalTypes: getUniqueAnimalTypes,
+     renderAnimalModal: renderAnimalModal,
+     renderAnimalArea: renderAnimalArea,
+     getState: getState,
+     loadState: loadState,
 
     /** 동물 이름을 변경한다. */
     renameAnimal: function (id, newName) {
