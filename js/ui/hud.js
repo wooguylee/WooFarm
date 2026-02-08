@@ -8,7 +8,13 @@
     let selectedTool = 'hoe';
 
     window.HudUI = {
+         // ── 이벤트 리스너 추적 ────────────────────────────
+         _eventHandlers: {},
+         
          init() {
+             // 기존 리스너 정리 (중복 방지)
+             this.cleanup();
+             
              this.setupToolbar();
              this.setupHudButtons();
              this.setupKeyboardShortcuts();
@@ -235,14 +241,81 @@
             }, 1500);
         },
 
-        /** 이벤트 리스너 */
-        setupEventListeners() {
-            Utils.eventBus.on('time_tick', () => this.update());
-            Utils.eventBus.on('gold_changed', (data) => this.updateGoldDisplay(data.gold));
-            Utils.eventBus.on('level_up', () => this.update());
-            Utils.eventBus.on('day_start', (data) => {
-                if (data && data.day) this.showDayTransition(data.day);
-            });
+         /** 이벤트 리스너 정리 (메모리 누수 방지) */
+         cleanup() {
+             // 등록된 이벤트 리스너 모두 제거
+             if (this._eventHandlers.time_tick) {
+                 Utils.eventBus.off('time_tick', this._eventHandlers.time_tick);
+             }
+             if (this._eventHandlers.gold_changed) {
+                 Utils.eventBus.off('gold_changed', this._eventHandlers.gold_changed);
+             }
+             if (this._eventHandlers.level_up) {
+                 Utils.eventBus.off('level_up', this._eventHandlers.level_up);
+             }
+             if (this._eventHandlers.day_start) {
+                 Utils.eventBus.off('day_start', this._eventHandlers.day_start);
+             }
+             
+             // DOM 이벤트 리스너 제거
+             if (this._eventHandlers.gameSpeed && this._eventHandlers.gameSpeedEl) {
+                 this._eventHandlers.gameSpeedEl.removeEventListener('input', this._eventHandlers.gameSpeed);
+             }
+             if (this._eventHandlers.sfxVol && this._eventHandlers.sfxVolEl) {
+                 this._eventHandlers.sfxVolEl.removeEventListener('input', this._eventHandlers.sfxVol);
+             }
+             if (this._eventHandlers.bgmVol && this._eventHandlers.bgmVolEl) {
+                 this._eventHandlers.bgmVolEl.removeEventListener('input', this._eventHandlers.bgmVol);
+             }
+             if (this._eventHandlers.seedPanelClose && this._eventHandlers.seedPanelCloseEl) {
+                 this._eventHandlers.seedPanelCloseEl.removeEventListener('click', this._eventHandlers.seedPanelClose);
+             }
+             if (this._eventHandlers.btnSave && this._eventHandlers.btnSaveEl) {
+                 this._eventHandlers.btnSaveEl.removeEventListener('click', this._eventHandlers.btnSave);
+             }
+             if (this._eventHandlers.btnMenu && this._eventHandlers.btnMenuEl) {
+                 this._eventHandlers.btnMenuEl.removeEventListener('click', this._eventHandlers.btnMenu);
+             }
+             
+             // 도구바 리스너 정리
+             document.querySelectorAll('.tool-slot').forEach(slot => {
+                 if (this._eventHandlers['toolSlot_' + slot.dataset.tool]) {
+                     slot.removeEventListener('click', this._eventHandlers['toolSlot_' + slot.dataset.tool]);
+                 }
+             });
+             
+             // 모달 버튼 리스너 정리
+             ['inventory', 'quest', 'shop', 'animals', 'home', 'settings'].forEach(modal => {
+                 const btnId = 'btn-' + modal;
+                 if (this._eventHandlers[btnId] && this._eventHandlers[btnId + '_el']) {
+                     this._eventHandlers[btnId + '_el'].removeEventListener('click', this._eventHandlers[btnId]);
+                 }
+             });
+             
+             // 키보드 단축키 제거
+             if (this._eventHandlers.keydown) {
+                 document.removeEventListener('keydown', this._eventHandlers.keydown);
+             }
+             
+             // 맵 초기화
+             this._eventHandlers = {};
+             console.log('[HudUI] 이벤트 리스너 정리 완료');
+         },
+
+         /** 이벤트 리스너 */
+         setupEventListeners() {
+             // 이벤트 리스너를 함수로 저장하여 나중에 제거 가능하게 함
+             this._eventHandlers.time_tick = () => this.update();
+             this._eventHandlers.gold_changed = (data) => this.updateGoldDisplay(data.gold);
+             this._eventHandlers.level_up = () => this.update();
+             this._eventHandlers.day_start = (data) => {
+                 if (data && data.day) this.showDayTransition(data.day);
+             };
+             
+             Utils.eventBus.on('time_tick', this._eventHandlers.time_tick);
+             Utils.eventBus.on('gold_changed', this._eventHandlers.gold_changed);
+             Utils.eventBus.on('level_up', this._eventHandlers.level_up);
+             Utils.eventBus.on('day_start', this._eventHandlers.day_start);
 
             // 설정 슬라이더
             const gameSpeed = document.getElementById('game-speed');
