@@ -1056,6 +1056,127 @@ select:focus-visible {
 }
 
 /* --------------------------------------------------------------------------
+   Modal / Dialog Styles
+   -------------------------------------------------------------------------- */
+.modal {
+   position: fixed;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   z-index: var(--z-modal);
+   background-color: rgba(62, 39, 35, 0.95);
+   border: 3px solid var(--pixel-border);
+   border-radius: 8px;
+   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+   max-width: 90%;
+   max-height: 90%;
+   overflow-y: auto;
+   display: flex;
+   flex-direction: column;
+}
+
+.modal-header {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   padding: var(--sp-md);
+   border-bottom: 2px solid var(--pixel-border);
+   gap: var(--sp-md);
+   flex-shrink: 0;
+}
+
+.modal-header h2 {
+   color: white;
+   margin: 0;
+   font-size: 1.2rem;
+   font-weight: bold;
+   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.modal-header h3 {
+   color: white;
+   margin: 0;
+   font-size: 1rem;
+   font-weight: bold;
+   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.modal-body {
+   padding: var(--sp-md);
+   flex: 1;
+   overflow-y: auto;
+}
+
+.modal-close {
+   background: none;
+   border: none;
+   color: white;
+   font-size: 1.5rem;
+   cursor: pointer;
+   padding: 0;
+   width: 24px;
+   height: 24px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   transition: color var(--transition-fast);
+}
+
+.modal-close:hover {
+   color: var(--gold-light);
+}
+
+#modal-overlay {
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background-color: rgba(0, 0, 0, 0.7);
+   z-index: var(--z-modal-overlay);
+}
+
+/* Modal Tabs */
+.inv-tab,
+.shop-tab,
+.quest-tab {
+   color: white;
+   background-color: rgba(0, 0, 0, 0.3);
+   border: 2px solid var(--pixel-border);
+   padding: var(--sp-xs) var(--sp-sm);
+   cursor: pointer;
+   transition: all var(--transition-fast);
+}
+
+.inv-tab:hover,
+.shop-tab:hover,
+.quest-tab:hover {
+   background-color: rgba(255, 255, 255, 0.1);
+}
+
+.inv-tab.active,
+.shop-tab.active,
+.quest-tab.active {
+   background-color: var(--green);
+   color: white;
+   font-weight: bold;
+}
+
+/* Modal Content Text */
+.modal p,
+.modal label,
+.modal span {
+   color: white;
+}
+
+.item-name,
+.item-description,
+.quest-title,
+.quest-description {
+   color: white;
+}
+
+/* --------------------------------------------------------------------------
    Responsive Design
    -------------------------------------------------------------------------- */
 @media (max-width: 768px) {
