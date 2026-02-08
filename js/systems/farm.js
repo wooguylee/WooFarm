@@ -34,26 +34,30 @@
     watered: '\uD83D\uDCA7' // 💧
   };
 
-  window.FarmSystem = {
-    // ── 상수 (외부 접근용) ────────────────────────────
-    GRID_ROWS: GRID_ROWS,
-    GRID_COLS: GRID_COLS,
+   window.FarmSystem = {
+     // ── 상수 (외부 접근용) ────────────────────────────
+     GRID_ROWS: GRID_ROWS,
+     GRID_COLS: GRID_COLS,
 
-    // ── 상태 ──────────────────────────────────────────
-    grid: null,
+     // ── 상태 ──────────────────────────────────────────
+     grid: null,
+     
+     /** @private 등록된 이벤트 핸들러 추적 (메모리 누수 방지) */
+     _eventHandlers: {},
 
-    // ── 초기화 ────────────────────────────────────────
+     // ── 초기화 ────────────────────────────────────────
 
-    /**
-     * 농장 시스템을 초기화합니다.
-     * 빈 그리드를 생성하고 DOM에 렌더링합니다.
-     */
-    init: function () {
-      this.grid = this._createEmptyGrid();
-      this.renderGrid();
-      this._bindEvents();
-      console.log('[FarmSystem] 초기화 완료 (' + GRID_ROWS + 'x' + GRID_COLS + ')');
-    },
+     /**
+      * 농장 시스템을 초기화합니다.
+      * 빈 그리드를 생성하고 DOM에 렌더링합니다.
+      */
+     init: function () {
+       this.cleanup();  // 기존 리스너 정리 (중복 방지)
+       this.grid = this._createEmptyGrid();
+       this.renderGrid();
+       this._bindEvents();
+       console.log('[FarmSystem] 초기화 완료 (' + GRID_ROWS + 'x' + GRID_COLS + ')');
+     },
 
     // ── 렌더링 ────────────────────────────────────────
 
@@ -467,30 +471,51 @@
 
     // ── 내부 헬퍼 ────────────────────────────────────
 
-    /**
-     * @private 이벤트 리스너를 바인딩합니다.
-     */
-    _bindEvents: function () {
-      var self = this;
+     /**
+      * @private 이벤트 리스너를 정리합니다 (메모리 누수 방지).
+      */
+     cleanup: function () {
+       if (this._eventHandlers.time_tick) {
+         eventBus.off('time_tick', this._eventHandlers.time_tick);
+       }
+       if (this._eventHandlers.day_start) {
+         eventBus.off('day_start', this._eventHandlers.day_start);
+       }
+       if (this._eventHandlers.season_changed) {
+         eventBus.off('season_changed', this._eventHandlers.season_changed);
+       }
+       this._eventHandlers = {};
+       console.log('[FarmSystem] 이벤트 리스너 정리 완료');
+     },
 
-      // 매 시간 틱마다 작물 성장
-      eventBus.on('time_tick', function () {
-        self.growCrops();
-      });
+     /**
+      * @private 이벤트 리스너를 바인딩합니다.
+      */
+     _bindEvents: function () {
+       var self = this;
 
-      // 새 하루 시작 → 비 관개 확인
-      eventBus.on('day_start', function () {
-        var effects = window.WeatherSystem ? window.WeatherSystem.getWeatherEffects() : {};
-        if (effects.watersCrops) {
-          self.waterAllFromRain();
-        }
-      });
+       // 매 시간 틱마다 작물 성장
+       this._eventHandlers.time_tick = function () {
+         self.growCrops();
+       };
 
-      // 계절 변경 → 계절 부적합 작물 시들기
-      eventBus.on('season_changed', function (data) {
-        self._wiltOutOfSeasonCrops(data ? data.season : null);
-      });
-    },
+       // 새 하루 시작 → 비 관개 확인
+       this._eventHandlers.day_start = function () {
+         var effects = window.WeatherSystem ? window.WeatherSystem.getWeatherEffects() : {};
+         if (effects.watersCrops) {
+           self.waterAllFromRain();
+         }
+       };
+
+       // 계절 변경 → 계절 부적합 작물 시들기
+       this._eventHandlers.season_changed = function (data) {
+         self._wiltOutOfSeasonCrops(data ? data.season : null);
+       };
+
+       eventBus.on('time_tick', this._eventHandlers.time_tick);
+       eventBus.on('day_start', this._eventHandlers.day_start);
+       eventBus.on('season_changed', this._eventHandlers.season_changed);
+     },
 
     /**
      * @private 빈 그리드를 생성합니다.
