@@ -596,11 +596,28 @@
         if (selectedSeed) {
           // 씨앗 ID에서 작물 ID 추출 (예: 'tomato_seed' → 'tomato')
           var cropId = selectedSeed.replace('_seed', '');
-          this.plantCrop(row, col, cropId);
+          var success = this.plantCrop(row, col, cropId);
+          
+          // 성공하면 씨앗 패널을 열어서 업데이트된 수량 표시
+          if (success) {
+            var season = window.TimeSystem ? window.TimeSystem.currentSeason : 'spring';
+            window.InventorySystem.renderSeedPanel(season);
+            
+            // 씨앗 패널 열기
+            var seedPanel = document.getElementById('seed-panel');
+            if (seedPanel) {
+              seedPanel.classList.remove('hidden');
+            }
+          }
         } else {
           // 씨앗이 선택되지 않았으면 씨앗 패널 열기
           var season = window.TimeSystem ? window.TimeSystem.currentSeason : 'spring';
           window.InventorySystem.renderSeedPanel(season);
+          
+          var seedPanel = document.getElementById('seed-panel');
+          if (seedPanel) {
+            seedPanel.classList.remove('hidden');
+          }
         }
       }
     },

@@ -8,12 +8,12 @@
     let selectedTool = 'hoe';
 
     window.HudUI = {
-        init() {
-            this.setupToolbar();
-            this.setupHudButtons();
-            this.setupKeyboardShortcuts();
-            this.setupEventListeners();
-        },
+         init() {
+             this.setupToolbar();
+             this.setupHudButtons();
+             this.setupKeyboardShortcuts();
+             this.setupEventListeners();
+         },
 
         /** HUD 전체 업데이트 */
         update() {
@@ -58,20 +58,20 @@
 
         /** 도구바 설정 */
         setupToolbar() {
-            const toolSlots = document.querySelectorAll('.tool-slot');
-            toolSlots.forEach(slot => {
-                slot.addEventListener('click', () => {
-                    this.selectTool(slot.dataset.tool);
-                });
-            });
-        },
+             const toolSlots = document.querySelectorAll('.tool-slot');
+             toolSlots.forEach(slot => {
+                 slot.addEventListener('click', () => {
+                     this.selectTool(slot.dataset.tool);
+                 });
+             });
+         },
 
          /** 도구 선택 */
          selectTool(toolName) {
              selectedTool = toolName;
              window.currentTool = toolName;
              document.querySelectorAll('.tool-slot').forEach(slot => {
-                 slot.classList.toggle('selected', slot.dataset.tool === toolName);
+                  slot.classList.toggle('selected', slot.dataset.tool === toolName);
              });
 
              // 씨앗 선택 시 씨앗 패널 표시
@@ -276,7 +276,10 @@
             const seedPanelClose = document.querySelector('#seed-panel .side-panel-close');
             if (seedPanelClose) {
                 seedPanelClose.addEventListener('click', () => {
-                    this.selectTool('hoe'); // 다른 도구로 변경
+                    const seedPanel = document.getElementById('seed-panel');
+                    if (seedPanel) {
+                        seedPanel.classList.add('hidden');
+                    }
                 });
             }
 

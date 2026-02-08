@@ -381,6 +381,16 @@
           }
         }
       });
+
+      // 씨앗 심기 후 씨앗 패널 자동 갱신
+      eventBus.on('crop_planted', function (data) {
+        // 씨앗 패널이 열려있으면 다시 렌더링하여 수량 업데이트
+        var seedPanel = document.getElementById('seed-panel');
+        if (seedPanel && !seedPanel.classList.contains('hidden')) {
+          var currentSeason = window.TimeSystem ? window.TimeSystem.currentSeason : 'spring';
+          self.renderSeedPanel(currentSeason);
+        }
+      });
     },
 
     /**
