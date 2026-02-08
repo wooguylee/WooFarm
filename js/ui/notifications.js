@@ -151,45 +151,49 @@
              const self = this;
 
              // 각 이벤트 핸들러를 함수로 저장하여 나중에 제거 가능하게 함
-             _eventHandlers.crop_harvested = (data) => {
+              _eventHandlers.crop_harvested = (data) => {
                  const crop = CROP_DATA[data.cropId];
-                 if (crop) self.show(`🌾 ${crop.name} 수확!`, 'success');
-             };
+                 if (crop) {
+                     console.log(`🌾 ${crop.name} 수확!`);
+                 }
+              };
 
-             _eventHandlers.crop_planted = (data) => {
-                 const crop = CROP_DATA[data.cropId];
-                 if (crop) self.show(`🌱 ${crop.name} 씨앗을 심었습니다`, 'info');
-             };
+              _eventHandlers.crop_planted = (data) => {
+                  const crop = CROP_DATA[data.cropId];
+                  if (crop) {
+                      console.log(`🌱 ${crop.name} 씨앗을 심었습니다`);
+                  }
+              };
 
              _eventHandlers.crop_withered = () => {
                  self.show('💀 계절이 바뀌어 작물이 시들었습니다...', 'warning');
              };
 
-             _eventHandlers.item_purchased = (data) => {
-                 const itemData = window.ITEM_DATA[data.itemId] || window.CROP_DATA[data.itemId] || window.ANIMAL_DATA[data.itemId];
-                 const name = itemData ? itemData.name : '아이템';
-                 self.show(`🛒 ${name} 구매 완료!`, 'info');
-             };
+              _eventHandlers.item_purchased = (data) => {
+                  const itemData = window.ITEM_DATA[data.itemId] || window.CROP_DATA[data.itemId] || window.ANIMAL_DATA[data.itemId];
+                  const name = itemData ? itemData.name : '아이템';
+                  console.log(`🛒 ${name} 구매 완료!`);
+              };
 
-             _eventHandlers.item_sold = (data) => {
-                 const itemData = window.ITEM_DATA[data.itemId] || window.CROP_DATA[data.itemId] || window.ANIMAL_DATA[data.itemId];
-                 const name = itemData ? itemData.name : '아이템';
-                 self.show(`💰 ${name} 판매! +${Utils.formatNumber(data.totalGold || 0)}G`, 'success');
-             };
+              _eventHandlers.item_sold = (data) => {
+                  const itemData = window.ITEM_DATA[data.itemId] || window.CROP_DATA[data.itemId] || window.ANIMAL_DATA[data.itemId];
+                  const name = itemData ? itemData.name : '아이템';
+                  console.log(`💰 ${name} 판매! +${Utils.formatNumber(data.totalGold || 0)}G`);
+              };
 
              _eventHandlers.quest_completed = (data) => {
                  const quest = QUEST_DATA[data.questId];
                  if (quest) self.show(`📜 퀘스트 완료: ${quest.name}`, 'reward', 5000);
              };
 
-             _eventHandlers.animal_fed = (data) => {
-                 self.show(`🥕 ${data.name || '동물'}에게 먹이를 줬습니다`, 'info');
-             };
+              _eventHandlers.animal_fed = (data) => {
+                  console.log(`🥕 ${data.name || '동물'}에게 먹이를 줬습니다`);
+              };
 
-             _eventHandlers.product_collected = (data) => {
-                 const productName = data.product ? data.product.name : data.productName || '생산품';
-                 self.show(`📦 ${productName} 수집!`, 'success');
-             };
+              _eventHandlers.product_collected = (data) => {
+                  const productName = data.product ? data.product.name : data.productName || '생산품';
+                  console.log(`📦 ${productName} 수집!`);
+              };
 
              _eventHandlers.season_changed = (data) => {
                  const seasonEmojis = { spring: '🌸', summer: '☀️', fall: '🍂', winter: '❄️' };
@@ -215,7 +219,7 @@
              };
 
              _eventHandlers.autoSaved = () => {
-                 self.show('💾 자동 저장 완료', 'info', 2000);
+                 console.log('💾 자동 저장 완료');
              };
 
              // 모든 이벤트 리스너 등록
